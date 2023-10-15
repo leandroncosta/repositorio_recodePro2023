@@ -1,0 +1,437 @@
+package com.agencia;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Scanner;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.ClientePacoteDAO;
+import com.agencia.dao.DestinoDAO;
+import com.agencia.dao.HospedagemDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.dao.PassagemDAO;
+import com.agencia.database.Database;
+import com.agencia.model.Cliente;
+import com.agencia.model.ClientePacote;
+import com.agencia.model.Hospedagem;
+import com.agencia.model.Pacote;
+import com.agencia.model.Passagem;
+import com.agencia.utils.Colors;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner input = new Scanner(System.in);
+		var connection = Database.createConnection();
+		ClienteDAO clienteDAO = new ClienteDAO(connection);
+		HospedagemDAO hospedagemDAO = new HospedagemDAO(connection);
+		PassagemDAO passagemDAO = new PassagemDAO(connection);
+		PacoteDAO pacoteDAO = new PacoteDAO(connection);
+		DestinoDAO destinoDAO = new DestinoDAO(connection);
+
+		int opcao = 0;
+		int subOpcao = 0;
+
+		System.out.println(
+				Colors.BLUE_BOLD_BRIGHT + "                   __      ___                  __  __       _     \r\n"
+						+ "                   \\ \\    / (_)                |  \\/  |     (_)    \r\n"
+						+ "                    \\ \\  / / _  __ _  __ _  ___| \\  / | __ _ _ ___ \r\n"
+						+ "                     \\ \\/ / | |/ _` |/ _` |/ _ \\ |\\/| |/ _` | / __|\r\n"
+						+ "                      \\  /  | | (_| | (_| |  __/ |  | | (_| | \\__ \\\r\n"
+						+ "                       \\/   |_|\\__,_|\\__, |\\___|_|  |_|\\__,_|_|___/\r\n"
+						+ "                                      __/ |                        \r\n"
+						+ "                                     |___/                         \r\n" + "         ");
+
+		do {
+			System.out.println(Colors.BLUE_BOLD_BRIGHT + "\n 1 - Clientes");
+			System.out.println(" 2 - Pacotes de viagens");
+			System.out.println(" 3 - Passagens");
+			System.out.println(" 4 - Pagamentos");
+			System.out.println(" 5 - Sair");
+			System.out.printf(" Escolha uma opção: " + Colors.RESET);
+
+			opcao = input.nextInt();
+
+			switch (opcao) {
+			case 1:
+				showOptions("cliente");
+
+				subOpcao = input.nextInt();
+
+				switch (subOpcao) {
+				case 1:
+					Cliente cliente = new Cliente();
+
+					System.out.println("");
+					System.out.println(Colors.YELLOW + " Informe os dados necessários:" + Colors.RESET);
+					System.out.print(" Nome: ");
+					cliente.setNome(input.next());
+					System.out.print(" E-mail: ");
+					cliente.setEmail(input.next());
+					System.out.print(" Telefone: ");
+					cliente.setTelefone(input.next());
+					System.out.print(" Passaporte: ");
+					cliente.setPassaporte(input.next());
+					System.out.print(" Cpf: ");
+					cliente.setCpf(input.next());
+
+					ClienteDAO.create(cliente);
+
+					break;
+				case 2:
+					List<Cliente> clientes = ClienteDAO.read("");
+
+					System.out.println(Colors.YELLOW
+							+ "-----------------------------------------------------------------------------");
+					System.out.printf("%5s %20s %20s %20s", "ID", "NAME", "EMAIL", "TEL");
+					System.out.println();
+					System.out.println("-----------------------------------------------------------------------------");
+					for (Cliente cliente1 : clientes) {
+						System.out.format("%5s %20s %20s %20s", cliente1.getId(), cliente1.getNome(),
+								cliente1.getEmail(), cliente1.getTelefone());
+						System.out.println();
+
+					}
+					System.out.println("-----------------------------------------------------------------------------"
+							+ Colors.RESET);
+					System.out.println("");
+					break;
+				case 3:
+					System.out.printf(" Informe o ID ou CPF do cliente: ");
+					int idOrCpf = input.nextInt();
+
+					Cliente cliente2 = ClienteDAO.findBy(idOrCpf);
+
+					System.out.printf(Colors.GREEN + " Nome: %s CPF: %s %n", cliente2.getNome(),
+							cliente2.getCpf() + Colors.RESET);
+
+					System.out.println("");
+					System.out.println(Colors.YELLOW + " Atualize os dados abaixo: " + Colors.RESET);
+					System.out.print(" Nome: ");
+					cliente2.setNome(input.next());
+					System.out.print(" E-mail: ");
+					cliente2.setEmail(input.next());
+					System.out.print(" Telefone: ");
+					cliente2.setTelefone(input.next());
+					System.out.print(" Passaporte: ");
+					cliente2.setPassaporte(input.next());
+					System.out.print(" Cpf: ");
+					cliente2.setCpf(input.next());
+
+					ClienteDAO.update(cliente2);
+					break;
+				case 4:
+					System.out.printf(" Informe o ID ou CPF do cliente a ser excluído: ");
+					int deleteIdOrCpf = input.nextInt();
+
+					Cliente cliente3 = ClienteDAO.findBy(deleteIdOrCpf);
+
+					System.out.printf(Colors.GREEN + " Nome: %s Email: %s %n", cliente3.getNome(),
+							cliente3.getEmail() + Colors.RESET);
+					System.out.print("\n Deseja excluir? (y/n) ");
+					String yesOrNo = input.next();
+
+					if (yesOrNo.equalsIgnoreCase("y")) {
+						ClienteDAO.delete(deleteIdOrCpf);
+					} else if (yesOrNo.equalsIgnoreCase("n")) {
+						System.out.printf(" Cliente não foi excluído");
+					} else {
+						System.out.printf(" Tente novamente..");
+					}
+
+					break;
+				case 5:
+					break;
+				default:
+					System.out.printf("\n Tente novamente... \n");
+				}
+
+				break;
+
+			/// ================ PACOTE ============================ //
+			case 2:
+				showOptions("pacotes");
+
+				subOpcao = input.nextInt();
+
+				switch (subOpcao) {
+				case 1:
+					Pacote pacote = new Pacote();
+
+					System.out.println("");
+					System.out.println(Colors.YELLOW + " Informe os dados necessários:" + Colors.RESET);
+
+					pacote.setPromocao(true);
+
+					System.out.print(" Selecione o ID da hospedagem: (default 1 ou 2) ");
+					int hospedagemId = input.nextInt();
+					Hospedagem hsp = HospedagemDAO.findBy(hospedagemId);
+					pacote.setHospedagem(hsp);
+					System.out.printf(Colors.GREEN + " Nome: %s Endereco: %s %n", hsp.getNome(),
+							hsp.getEndereco() + Colors.RESET);
+
+					System.out.print(" Selecione o ID passagem: (default 1 ou 2) ");
+					int passagemId = input.nextInt();
+					pacote.setPassagem(PassagemDAO.findBy(passagemId));
+
+					pacote.setValorTotal(hsp.getValor().add(PassagemDAO.findBy(passagemId).getValor()));
+
+					PacoteDAO.create(pacote);
+					break;
+				case 2:
+
+					List<Pacote> pacotes = PacoteDAO.read("");
+
+					System.out.println(Colors.YELLOW
+							+ "-----------------------------------------------------------------------------");
+					System.out.printf("%5s %20s", "ID", "DATA COMPRA");
+					System.out.println();
+					System.out.println("-----------------------------------------------------------------------------");
+					for (Pacote pacote1 : pacotes) {
+						System.out.format("%5s %20s", pacote1.getId(), pacote1.getValorTotal());
+						System.out.println("");
+
+					}
+					System.out.println("-----------------------------------------------------------------------------"
+							+ Colors.RESET);
+					break;
+				case 3:
+					System.out.printf(" Informe o ID do pacote: ");
+					int id = input.nextInt();
+
+					Pacote pacote2 = PacoteDAO.findBy(id);
+
+					System.out.printf(Colors.GREEN + " Id: %s Valor total: %s %n",  pacote2.getId(), pacote2.getValorTotal()+ Colors.RESET);
+					System.out.println("");
+					System.out.println(Colors.YELLOW + " Atualize os dados abaixo: " + Colors.RESET);
+					System.out.print(" Valor Total: ");
+					pacote2.setValorTotal((BigDecimal) input.nextBigDecimal());
+
+					PacoteDAO.update(pacote2);
+
+					break;
+				case 4:
+					System.out.printf(" Informe o ID do pacote a ser excluído: ");
+					int deleteId = input.nextInt();
+
+					Pacote pacote3 = PacoteDAO.findBy(deleteId);
+
+					System.out.printf(Colors.GREEN +" Id: %s Valor total: %s %n",  pacote3.getId(), pacote3.getValorTotal()+ Colors.RESET);
+					System.out.printf(" Deseja excluir? (y/n) ");
+					String yesOrNo = input.next();
+
+					if (yesOrNo.equalsIgnoreCase("y")) {
+						ClienteDAO.delete(deleteId);
+					} else if (yesOrNo.equalsIgnoreCase("n")) {
+						System.out.printf(" Pacote não foi excluído");
+					} else {
+						System.out.printf(" Tente novamente..");
+					}
+
+					break;
+				case 5:
+					break;
+				default:
+					System.out.printf("Tente novamente..");
+				}
+
+				break;
+
+			/// ================ passagem ============================ //
+			case 3:
+				showOptions("passagem");
+				
+				subOpcao = input.nextInt();
+
+				switch (subOpcao) {
+				
+				Pacote pacote = new Pacote();
+
+				System.out.println("");
+				System.out.println(Colors.YELLOW + " Informe os dados necessários:" + Colors.RESET);
+
+				pacote.setPromocao(true);
+
+				System.out.print(" Selecione o ID da hospedagem: (default 1 ou 2) ");
+				int hospedagemId = input.nextInt();
+				Hospedagem hsp = HospedagemDAO.findBy(hospedagemId);
+				pacote.setHospedagem(hsp);
+				System.out.printf(Colors.GREEN + " Nome: %s Endereco: %s %n", hsp.getNome(),
+						hsp.getEndereco() + Colors.RESET);
+
+				System.out.print(" Selecione o ID passagem: (default 1 ou 2) ");
+				int passagemId = input.nextInt();
+				pacote.setPassagem(PassagemDAO.findBy(passagemId));
+
+				pacote.setValorTotal(hsp.getValor().add(PassagemDAO.findBy(passagemId).getValor()));
+
+				PacoteDAO.create(pacote);
+				
+				case 1:
+					Passagem passagem = new Passagem();
+
+					System.out.println(" Informe: ");
+					System.out.print(" Deseja de qual compania ? 1 - Azul 2 - GOL: ");
+					passagem.setCompania(input.next());
+
+					System.out.print("Deseja passagem de volta?: (y/n) ");
+					passagem.setIdaEvolta(input.nextBoolean());
+
+					System.out.println("Deseja qual tipo de voo?: 1 - Direto 2 - Escala 3 - Conexão ");
+					passagem.setTipoVoo(input.next());
+					System.out.print("Informe a quantidade: ");
+					passagem.setQuantidade(input.nextInt());
+					System.out.print("Qual destino (país)?: ");
+					passagem.setDestino(null);
+
+					// passagem.setValor();
+
+					// PacoteDAO.create();
+
+					break;
+				case 2:
+					List<Cliente> clientes = ClienteDAO.read("");
+
+					System.out.println(Colors.YELLOW
+							+ "-----------------------------------------------------------------------------");
+					System.out.printf("%5s %20s %20s %20s", "ID", "NAME", "EMAIL", "TEL");
+					System.out.println();
+					System.out.println("-----------------------------------------------------------------------------");
+					for (Cliente cliente1 : clientes) {
+						System.out.format("%5s %20s %20s %20s", cliente1.getId(), cliente1.getNome(),
+								cliente1.getEmail(), cliente1.getTelefone());
+						System.out.println();
+
+					}
+					System.out.println("-----------------------------------------------------------------------------"
+							+ Colors.RESET);
+					System.out.println("");
+					break;
+				case 3:
+					System.out.printf("Informe o id ou cpf do cliente:");
+					int idOrCpf = input.nextInt();
+
+					Passagem passagem2 = PassagemDAO.findBy(idOrCpf);
+
+					System.out.printf(Colors.YELLOW + "Nome: %s Email: %s %n", passagem2.getDestino().getPais(),
+							passagem2.getCompania() + Colors.RESET);
+					break;
+				case 4:
+					System.out.printf(" Informe o id ou cpf da passagem a ser exclído: ");
+					int deleteIdOrCpf = input.nextInt();
+
+					Passagem passagem3 = PassagemDAO.findBy(deleteIdOrCpf);
+
+					// System.out.printf("Nome: %s Email: %s ... %n", passagem3.getNome(),
+					// passagem3.getEmail());
+					System.out.printf("Deseja excluir? (y/n)");
+					String yesOrNo = input.next();
+
+					if (yesOrNo.equalsIgnoreCase("y")) {
+						PassagemDAO.delete(deleteIdOrCpf);
+					} else if (yesOrNo.equalsIgnoreCase("n")) {
+						System.out.printf("Cliente não foi excluído");
+					} else {
+						System.out.printf("Tente novamente..");
+					}
+
+					break;
+				case 5:
+				
+					break;
+				default:
+					System.out.println("Tente novamente..");
+				}
+
+				break;
+
+			/// ================ pagamento ============================ //
+			case 4:
+				showOptions("pagamento");
+
+				switch (subOpcao) {
+				case 1:
+					ClientePacote pagamento = new ClientePacote();
+
+					break;
+				case 2:
+					List<ClientePacote> pagamentos = ClientePacoteDAO.read("");
+
+					System.out.println(Colors.YELLOW
+							+ "-----------------------------------------------------------------------------");
+					System.out.printf("%5s %20s %20s %20s", "ID", "DATA COMPRA", "IDCLIENTE", "IDPACOTE");
+					System.out.println();
+					System.out.println("-----------------------------------------------------------------------------");
+					for (ClientePacote pagamento2 : pagamentos) {
+						System.out.format("%5s %20s %20s %20s", pagamento2.getId(), pagamento2.getDataCompra(),
+								pagamento2.getCliente().getCpf(), pagamento2.getPacote().getId());
+						System.out.println();
+
+					}
+					System.out.println("-----------------------------------------------------------------------------"
+							+ Colors.RESET);
+
+					break;
+				case 3:
+					System.out.printf("Informe o id ou cpf do cliente:");
+					int idOrCpf = input.nextInt();
+
+					Passagem passagem2 = PassagemDAO.findBy(idOrCpf);
+
+					System.out.printf(Colors.YELLOW + "Nome: %s Email: %s %n", passagem2.getDestino().getPais(),
+							passagem2.getCompania() + Colors.RESET);
+					break;
+				case 4:
+					System.out.printf("Informe o id ou cpf da passagem a ser exclído: ");
+					int deleteIdOrCpf = input.nextInt();
+
+					Passagem passagem3 = PassagemDAO.findBy(deleteIdOrCpf);
+
+					// System.out.printf("Nome: %s Email: %s ... %n", passagem3.getNome(),
+					// passagem3.getEmail());
+					System.out.printf("Deseja excluir? (y/n)");
+					String yesOrNo = input.next();
+
+					if (yesOrNo.equalsIgnoreCase("y")) {
+						PassagemDAO.delete(deleteIdOrCpf);
+					} else if (yesOrNo.equalsIgnoreCase("n")) {
+						System.out.printf("Cliente não foi excluído");
+					} else {
+						System.out.printf("Tente novamente..");
+					}
+
+					break;
+				case 5:
+					input.close();
+
+					break;
+				default:
+					System.out.printf("Tente novamente..");
+				}
+
+				break;
+
+			case 5:
+				input.close();
+				clienteDAO.fecharConexao();
+				pacoteDAO.fecharConexao();
+				passagemDAO.fecharConexao();
+				break;
+			default:
+
+			}
+
+		} while (opcao != 5);
+
+	}
+
+	public static void showOptions(String service) {
+
+		System.out.println("");
+		System.out.println(Colors.WHITE_BOLD_BRIGHT + " [Menu " + service + "]" + Colors.RESET);
+		System.out.println("\n 1 - Adicionar \n 2 - Visualizar \n 3 - Atualizar \n 4 - Deletar \n 5 - Sair ");
+		System.out.printf(" Escolha uma opção: ");
+	}
+
+}

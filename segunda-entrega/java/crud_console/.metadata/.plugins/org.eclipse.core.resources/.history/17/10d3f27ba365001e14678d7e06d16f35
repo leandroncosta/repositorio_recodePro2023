@@ -1,0 +1,142 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.Usuario;
+import com.agencia.utils.Colors;
+
+public class UsuarioDAO {
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public UsuarioDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(Usuario usuario) {
+		sql = "INSERT INTO usuario(id, email, senha, emailSecundario, tipo) VALUES(null, ?, ?, ?, ?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setString(1, usuario.getEmail());
+			stmt.setString(2, usuario.getSenha());
+			stmt.setString(3, usuario.getEmailSecundario());
+			stmt.setString(4, usuario.getTipo());
+			
+			
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--Usuario criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println("--Erro ao criar usuario, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<Usuario> read(String pesquisa) {
+		sql = String.format("SELECT * FROM usuario WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa,
+				pesquisa);
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Usuario Usuario = new Usuario();
+
+				Usuario.setId(resultSet.getInt("id"));
+				Usuario.setDataCompra(resultSet.getDate("dataCompra"));
+				Usuario.setCliente(ClienteDAO.findBy(resultSet.getInt("idCliente")));
+				Usuario.setPassagem(PassagemDAO.findBy(resultSet.getInt("idPassagem")));
+
+				passagens.add(Usuario);
+
+				// stmt.setTimestamp(3, new
+				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
+			}
+			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return passagens;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possíevl ler os dados da tabela Usuario. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(Usuario Usuario) {
+		sql = "UPDATE Usuario SET dataCompra = ?, idCliente = ?. idPassagem = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setTimestamp(1, new java.sql.Timestamp(Usuario.getDataCompra().getTime()));
+			stmt.setInt(2, Usuario.getCliente().getId());
+			stmt.setInt(3, Usuario.getPassagem().getId());
+			stmt.setInt(3, Usuario.getId());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "--Usuario atualizada" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf("--Erro ao atualizar Usuario com o id : %d, Mensagem: %n",
+					Usuario.getId(), e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM Usuario WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--Usuario foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + "--Erro ao deletar Usuario com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static Usuario findBy(int UsuarioId) {
+		sql = String.format("SELECT * FROM Usuario WHERE id = %d or cpf = %s", UsuarioId,
+				UsuarioId);
+		Usuario Usuario = new Usuario();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+
+				Usuario.setId(resultSet.getInt("id"));
+				Usuario.setDataCompra(resultSet.getDate("dataCompra"));
+				Usuario.setCliente(ClienteDAO.findBy(resultSet.getInt("idCliente")));
+				Usuario.setPassagem(PassagemDAO.findBy(resultSet.getInt("idPassagem")));
+
+			}
+
+			System.out.println(Colors.GREEN + "--Encontrado Usuario com sucesso" + Colors.RESET);
+
+			return Usuario;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possível encontrar o Usuario informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+}

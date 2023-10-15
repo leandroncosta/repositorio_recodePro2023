@@ -1,0 +1,139 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.Hospedagem;
+import com.agencia.utils.Colors;
+
+public class HospedagemDAO {
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public HospedagemDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(Hospedagem hospedagem) {
+		sql = "INSERT INTO hospedagem(id, nome, estrelas, cnpj, promocao, valor, endereco, dataEntrada, dataSaida) VALUES(null, ?, ?, ?, ?, ?, ?,?,?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, hospedagem.getNome());
+			stmt.setInt(2, hospedagem.getEstrelas());
+            stmt.setString(3, hospedagem.getCnpj());
+            stmt.setBoolean(4, hospedagem.getPromocao());
+            stmt.setBigDecimal(5, hospedagem.getValor());
+            stmt.setString(6, hospedagem.getEndereco());
+            		stmt.setDate(7, hospedagem.getDataEntrada());
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--hospedagem criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println("--Erro ao criar hospedagem, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<hospedagem> read(String pesquisa) {
+		sql = String.format("SELECT * FROM hospedagem WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		List<hospedagem> hospedagems = new ArrayList<hospedagem>();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				hospedagem hospedagem = new hospedagem();
+				hospedagem.setId(resultSet.getInt("id"));
+				hospedagem.setPromocao(resultSet.getBoolean("promocao"));
+				hospedagem.setValorTotal(resultSet.getBigDecimal("valorTotal"));
+				//hospedagem.setHospedagem();
+				//hospedagem.setPassaporte(resultSet.getString("passaporte"));
+				//hospedagem.setCpf(resultSet.getString("cpf"));
+
+				//hospedagems.add(hospedagem);
+			}
+
+			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return hospedagems;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possíevl ler os dados da tabela hospedagem. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(hospedagem hospedagem) {
+		sql = "UPDATE hospedagem SET nome = ?, email = ?, telefone = ?, passaporte = ?, cpf = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, hospedagem.getNome());
+			stmt.setString(2, hospedagem.getEmail());
+			stmt.setString(3, hospedagem.getTelefone());
+			stmt.setString(4, hospedagem.getTelefone());
+			stmt.setString(5, hospedagem.getCpf());
+			stmt.setInt(6, hospedagem.getId());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "--hospedagem atualizado" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf("--Erro ao atualizar hospedagem com o id : %d, Mensagem: %n", hospedagem.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM hospedagem WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--hospedagem foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + "--Erro ao deletar hospedagem com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static hospedagem findBy(int hospedagemId) {
+		sql = String.format("SELECT * FROM hospedagem WHERE id = %d or cpf = %s", hospedagemId, hospedagemId);
+		hospedagem hospedagem = new hospedagem();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				hospedagem.setId(resultSet.getInt("id"));
+				hospedagem.setNome(resultSet.getString("nome"));
+				hospedagem.setEmail(resultSet.getString("email"));
+				hospedagem.setTelefone(resultSet.getString("telefone"));
+				hospedagem.setPassaporte(resultSet.getString("passaporte"));
+				hospedagem.setCpf(resultSet.getString("cpf"));
+			}
+
+			System.out.println(Colors.GREEN + "--Encontrado hospedagem com sucesso" + Colors.RESET);
+
+			return hospedagem;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possível encontrar o hospedagem informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+}

@@ -1,0 +1,5 @@
+INDEX VERSION 1.134+C:\Users\lnasc\OneDrive\Área de Trabalho\arrumar\recode\Java\agencia_viagem\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+296471815.index
+3862792047.index
+314586668.index

@@ -1,0 +1,11 @@
+package com.agencia.model;
+
+public class Usuario {
+	private int id;
+	private String email;
+	private String senha;
+	private String emailSecundario;
+	private String tipo;
+
+	
+}

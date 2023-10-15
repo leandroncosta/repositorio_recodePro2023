@@ -1,0 +1,22 @@
+package com.agencia.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.agencia.utils.Colors;
+
+
+public interface CRUD {
+	public static void create() {
+
+	}
+
+	public static void update(int id, String value) {
+
+	}
+
+	public static void delete(int id) {
+
+	}
+
+}

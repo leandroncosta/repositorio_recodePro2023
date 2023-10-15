@@ -1,0 +1,16 @@
+package com.agencia.dao;
+
+public interface CRUD {
+	public static void create() {
+
+	}
+
+	public static void update(int id, String value) {
+
+	}
+
+	public static void delete(int id) {
+
+	}
+
+}

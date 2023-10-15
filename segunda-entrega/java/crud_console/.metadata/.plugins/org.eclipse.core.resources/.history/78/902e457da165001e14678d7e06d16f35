@@ -1,0 +1,137 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.ClientePacote;
+import com.agencia.utils.Colors;
+
+public class ClientePacoteDAO {
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public ClientePacoteDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(ClientePacote clientePacote) {
+		sql = "INSERT INTO ClientePacote(id, dataCompra, idCliente, idPacote) VALUES(null, ?, ?, ?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setTimestamp(1, new java.sql.Timestamp(clientePacote.getDataCompra().getTime()));
+			stmt.setInt(2, clientePacote.getCliente().getId());
+			stmt.setInt(3, clientePacote.getPacote().getId());
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--ClientePacote criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println("--Erro ao criar clientePacote, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<ClientePacote> read(String pesquisa) {
+		sql = String.format("SELECT * FROM clientePacote WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		List<ClientePacote> pacotes = new ArrayList<ClientePacote>();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				ClientePacote clientePacote = new ClientePacote();
+
+				clientePacote.setId(resultSet.getInt("id"));
+	            clientePacote.setDataCompra(resultSet.getTimestamp("dataCompra"))
+	            clientePacote.setCliente(ClienteDAO.findBy(resultSet.getInt("idCliente")));
+	            clientePacote.setPacote(PacoteDAO.findBy(resultSet.getInt("idPacote")));
+	            
+	            pacotes.add(clientePacote);
+				
+				// stmt.setTimestamp(3, new
+				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
+			}
+			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return pacotes;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possíevl ler os dados da tabela clientePacote. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(ClientePacote clientePacote) {
+		sql = "UPDATE clientePacote SET dataCompra = ?, idCliente = ?. idPacote = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setTimestamp(1, new java.sql.Timestamp(clientePacote.getDataCompra().getTime()));
+			stmt.setInt(2, clientePacote.getCliente().getId());
+			stmt.setInt(3, clientePacote.getPacote().getId());
+			stmt.setInt(3, clientePacote.getId());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "--ClientePacote atualizada" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf("--Erro ao atualizar clientePacote com o id : %d, Mensagem: %n", clientePacote.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM clientePacote WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--ClientePacote foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + "--Erro ao deletar clientePacote com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static ClientePacote findBy(int clientePacoteId) {
+		sql = String.format("SELECT * FROM clientePacote WHERE id = %d or cpf = %s", clientePacoteId, clientePacoteId);
+		ClientePacote clientePacote = new ClientePacote();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+			
+				clientePacote.setId(resultSet.getInt("id"));
+	            clientePacote.setDataCompra(resultSet.getTimestamp("dataCompra"));
+	            clientePacote.setCliente(ClienteDAO.findBy(resultSet.getInt("idCliente")));
+	            clientePacote.setPacote(PacoteDAO.findBy(resultSet.getInt("idPacote")));
+	            
+			}
+
+			System.out.println(Colors.GREEN + "--Encontrado ClientePacote com sucesso" + Colors.RESET);
+
+			return clientePacote;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possível encontrar o clientePacote informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+}

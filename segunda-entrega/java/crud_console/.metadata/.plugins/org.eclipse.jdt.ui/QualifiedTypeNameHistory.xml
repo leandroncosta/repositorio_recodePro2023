@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.sql.DriverManager"/>
+    <fullyQualifiedTypeName name="main.Pais"/>
+    <fullyQualifiedTypeName name="main.DAO.PaisDAO"/>
+    <fullyQualifiedTypeName name="main.Database"/>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
+    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
+    <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="java.sql.SQLException"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Pais"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.PaisDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.CidadeDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Endereco"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Cidade"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Cliente"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.ClienteDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Pacote"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.Destino"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Destino"/>
+    <fullyQualifiedTypeName name="java.sql.Statement"/>
+    <fullyQualifiedTypeName name="com.agencia.utils.Colors"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Passagem"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.PassagemDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.model.ClientePacote"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.ClientePacoteDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.PacoteDAO"/>
+    <fullyQualifiedTypeName name="java.math.RoundingMode"/>
+    <fullyQualifiedTypeName name="com.agencia.database.Database"/>
+    <fullyQualifiedTypeName name="com.agencia.model.Hospedagem"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.DestinoDAO"/>
+    <fullyQualifiedTypeName name="java.security.Timestamp"/>
+    <fullyQualifiedTypeName name="java.sql.Timestamp"/>
+    <fullyQualifiedTypeName name="java.sql.Time"/>
+    <fullyQualifiedTypeName name="java.math.BigDecimal"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.HospedagemDAO"/>
+    <fullyQualifiedTypeName name="com.agencia.model.ClientePassagem"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="com.agencia.dao.ClientePassagemDAO"/>
+    <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+</qualifiedTypeNameHistroy>

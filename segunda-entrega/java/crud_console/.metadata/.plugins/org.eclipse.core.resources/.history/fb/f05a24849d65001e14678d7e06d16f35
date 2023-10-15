@@ -1,0 +1,140 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.Pacote;
+import com.agencia.model.pacote;
+import com.agencia.utils.Colors;
+
+public class PacoteDAO implements CRUD {
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public PacoteDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(Pacote pacote) {
+		sql = "INSERT INTO pacote(id, promocao, valorTotal, idHospedagem, idPassagem) VALUES(null, ?, ?, ?, ?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setBoolean(1, pacote.getPromocao());
+			stmt.setBigDecimal(2, pacote.getValorTotal());
+			stmt.setInt(3, pacote.getHospedagem().getId() );
+			stmt.setInt(4, pacote.getPassagem().getId());
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--Pacote criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println("--Erro ao criar pacote, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<Pacote> read(String pesquisa) {
+		sql = String.format("SELECT * FROM pacote WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		List<Pacote> pacotes = new ArrayList<Pacote>();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Pacote pacote = new Pacote();
+				
+				pacote.setId(resultSet.getInt("id"));
+				pacote.setPromocao(resultSet.getBoolean("promocao"));
+				pacote.setValorTotal(resultSet.getBigDecimal("valorTotal"));
+				pacote.setHospedagem(HospedagemDAO.findBy(resultSet.getInt("idHospedagem")));
+				pacote.setPassagem(PassagemDAO.findBy(resultSet.getInt("idPassagem")));
+				
+				pacotes.add(pacote);
+			}
+
+			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return pacotes;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possíevl ler os dados da tabela pacote. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(Pacote pacote) {
+		sql = "UPDATE pacote SET nome = ?, email = ?, telefone = ?, passaporte = ?, cpf = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, pacote.getNome());
+			stmt.setString(2, pacote.getEmail());
+			stmt.setString(3, pacote.getTelefone());
+			stmt.setString(4, pacote.getTelefone());
+			stmt.setString(5, pacote.getCpf());
+			stmt.setInt(6, pacote.getId());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "--pacote atualizado" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf("--Erro ao atualizar pacote com o id : %d, Mensagem: %n", pacote.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM pacote WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "--pacote foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + "--Erro ao deletar pacote com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static Pacote findBy(int pacoteId) {
+		sql = String.format("SELECT * FROM pacote WHERE id = %d or cpf = %s", pacoteId, pacoteId);
+		Pacote pacote = new pacote();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				pacote.setId(resultSet.getInt("id"));
+				pacote.setNome(resultSet.getString("nome"));
+				pacote.setEmail(resultSet.getString("email"));
+				pacote.setTelefone(resultSet.getString("telefone"));
+				pacote.setPassaporte(resultSet.getString("passaporte"));
+				pacote.setCpf(resultSet.getString("cpf"));
+			}
+
+			System.out.println(Colors.GREEN + "--Encontrado pacote com sucesso" + Colors.RESET);
+
+			return pacote;
+		} catch (SQLException e) {
+			System.out.println("--Não foi possível encontrar o pacote informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+
+}

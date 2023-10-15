@@ -1,0 +1,118 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.agencia.model.Cidade;
+
+import com.agencia.utils.Colors;
+
+
+public class CidadeDAO {
+	private final Connection conn;
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public CidadeDAO(Connection connection) {
+		this.conn = connection;
+	}
+
+	public void createCidade(Cidade cidade) {
+		sql = "INSERT INTO cidade(nomeCidade, idPais) VALUES (?, ?)";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			// enviando as propriedades do meu objeto para o banco
+			stmt.setString(1, cidade.getNomeCidade());
+			stmt.setInt(2, 1);
+
+			stmt.executeUpdate();
+			System.out.println(Colors.GREEN + "Cidade criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println("Erro ao adicionar cidade, Mensagem: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+		
+		}
+	}
+
+	public Cidade readCidade(int id) {
+		sql = "SELECT * FROM cidade WHERE id = ?";
+		Cidade cidade = new Cidade();
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+
+			rset = stmt.executeQuery();
+
+			if (rset.next()) {
+
+				cidade.setId(rset.getInt("id"));
+				cidade.setNomeCidade(rset.getString("nomeCidade"));
+				PaisDAO paisDAO = new PaisDAO(conn);
+				cidade.setPais(paisDAO.readPais(rset.getInt("idPais")));
+			}
+
+			System.out.println(Colors.GREEN + "cidade encontrada." + Colors.RESET);
+			return cidade;
+		} catch (SQLException e) {
+			System.out.printf("Erro ao ler o cidade com o id : %d, Mensagem: %n", id, e.getMessage());
+			return null;
+		} finally {
+			this.closeConnection();
+		}
+
+	}
+
+	public void updateCidade(int id, String value) {
+		// sql = String.format("UPDATE pais SET %s = ? WHERE id = ? LIMIT 1", attr)
+		sql = "UPDATE cidade SET nomeCidade = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, value);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "Nome da cidade alterado para %s. %n", value + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf("Erro ao atualizar  com o id : %d, Mensagem: %n", id, e.getMessage());
+
+		} finally {
+			this.closeConnection();
+		}
+	}
+
+	public void deleteCidade(int id) {
+		sql = "DELETE FROM pais WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + "Pais foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + "Erro ao deletar pais com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+			this.closeConnection();
+		}
+	}
+
+	private void closeConnection() {
+		try {
+			if (rset != null) {
+				rset.close();
+			}
+			if (conn != null && !conn.isClosed()) {
+				conn.close();
+				System.out.println("Conexão encerrada.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}

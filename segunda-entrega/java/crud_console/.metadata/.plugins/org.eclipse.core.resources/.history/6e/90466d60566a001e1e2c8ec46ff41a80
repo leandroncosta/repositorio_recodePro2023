@@ -1,0 +1,161 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.database.Database;
+import com.agencia.model.Hospedagem;
+import com.agencia.utils.Colors;
+
+public class HospedagemDAO {
+	private static Connection conn;
+	// private static Connection conn =
+	// Database.createConnection();
+	private static String sql;
+	private static ResultSet rset = null;
+
+	public HospedagemDAO(Connection connection) {
+	      this.conn = connection;
+	}
+
+	public static void create(Hospedagem hospedagem) {
+		sql = "INSERT INTO hospedagem(id, nome, estrelas, cnpj, promocao, valor, endereco, dataEntrada, dataSaida) VALUES(null, ?, ?, ?, ?, ?, ?,?,?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, hospedagem.getNome());
+			stmt.setInt(2, hospedagem.getEstrelas());
+			stmt.setString(3, hospedagem.getCnpj());
+			stmt.setBoolean(4, hospedagem.getPromocao());
+			stmt.setBigDecimal(5, hospedagem.getValor());
+			stmt.setString(6, hospedagem.getEndereco());
+			stmt.setTimestamp(7, new java.sql.Timestamp(hospedagem.getDataEntrada().getTime()));
+			stmt.setTimestamp(7, new java.sql.Timestamp(hospedagem.getDataSaida().getTime()));
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] hospedagem criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println(" [log] Erro ao criar hospedagem, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<Hospedagem> read(String pesquisa) {
+		sql = String.format("SELECT * FROM hospedagem WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		List<Hospedagem> hospedagens = new ArrayList<Hospedagem>();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Hospedagem hospedagem = new Hospedagem();
+				hospedagem.setId(resultSet.getInt("id"));
+				hospedagem.setNome(resultSet.getString("nome"));
+				hospedagem.setEstrelas(resultSet.getInt("estrelas"));
+				hospedagem.setNome(resultSet.getString("cnpj"));
+				hospedagem.setPromocao(resultSet.getBoolean("promocao"));
+				hospedagem.setValor(resultSet.getBigDecimal("valor"));
+				hospedagem.setEndereco(resultSet.getString("endereco"));
+				hospedagem.setDataEntrada(resultSet.getTimestamp("dataEntrada"));
+				hospedagem.setDataSaida(resultSet.getTimestamp("dataSaida"));
+				// stmt.setTimestamp(3, new
+				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
+			}
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return hospedagens;
+		} catch (SQLException e) {
+			System.out.println(" [log] Não foi possíevl ler os dados da tabela hospedagem. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(Hospedagem hospedagem) {
+		sql = "UPDATE hospedagem SET nome = ?, estrelas = ?, cnpj = ?, promocao = ?, valor = ?, endereco = ?, dataEntrada = ?, dataSaida = ? WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, hospedagem.getNome());
+			stmt.setInt(2, hospedagem.getEstrelas());
+			stmt.setString(3, hospedagem.getCnpj());
+			stmt.setBoolean(4, hospedagem.getPromocao());
+			stmt.setBigDecimal(5, hospedagem.getValor());
+			stmt.setString(6, hospedagem.getEndereco());
+			stmt.setTimestamp(7, new java.sql.Timestamp(hospedagem.getDataEntrada().getTime()));
+			stmt.setTimestamp(7, new java.sql.Timestamp(hospedagem.getDataSaida().getTime()));
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + " [log] hospedagem atualizada" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(" [log] Erro ao atualizar hospedagem com o id : %d, Mensagem: %n", hospedagem.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM hospedagem WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] hospedagem foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao deletar hospedagem com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static Hospedagem findBy(int hospedagemId) {
+		sql = String.format("SELECT * FROM hospedagem WHERE id = %d OR cnpj = %s", hospedagemId, hospedagemId);
+		Hospedagem hospedagem = new Hospedagem();
+
+		try (Statement statement = conn.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				hospedagem.setId(resultSet.getInt("id"));
+				hospedagem.setNome(resultSet.getString("nome"));
+				hospedagem.setEstrelas(resultSet.getInt("estrelas"));
+				hospedagem.setNome(resultSet.getString("cnpj"));
+				hospedagem.setPromocao(resultSet.getBoolean("promocao"));
+				hospedagem.setValor(resultSet.getBigDecimal("valor"));
+				hospedagem.setEndereco(resultSet.getString("endereco"));
+				hospedagem.setDataEntrada(resultSet.getTimestamp("dataEntrada"));
+				hospedagem.setDataSaida(resultSet.getTimestamp("dataSaida"));
+			}
+
+			System.out.println(Colors.GREEN + " [log] Encontrado hospedagem com sucesso" + Colors.RESET);
+
+			return hospedagem;
+		} catch (SQLException e) {
+			System.out.println(" [log] Não foi possível encontrar o hospedagem informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+
+	public void fecharConexao() {
+		try {
+			if (conn != null && !conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
