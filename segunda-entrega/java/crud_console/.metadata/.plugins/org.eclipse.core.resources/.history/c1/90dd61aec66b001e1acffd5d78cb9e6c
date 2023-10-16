@@ -1,0 +1,182 @@
+package com.agencia;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.ClientePacoteDAO;
+import com.agencia.dao.ClientePassagemDAO;
+import com.agencia.dao.DestinoDAO;
+import com.agencia.dao.HospedagemDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.dao.PassagemDAO;
+import com.agencia.database.Database;
+import com.agencia.menus.MenuCliente;
+import com.agencia.menus.MenuPacote;
+import com.agencia.menus.MenuPassagem;
+import com.agencia.model.Cliente;
+import com.agencia.model.ClientePacote;
+import com.agencia.model.Hospedagem;
+import com.agencia.model.Pacote;
+import com.agencia.model.Passagem;
+import com.agencia.utils.Colors;
+
+// CRUD APENAS PARA 4 CLASSES / TABELAS
+
+public class Main {
+
+	public static void main(String[] args) throws ParseException {
+
+		Scanner input = new Scanner(System.in);
+		var connection = Database.createConnection();
+		ClienteDAO clienteDAO = new ClienteDAO(connection);
+		HospedagemDAO hospedagemDAO = new HospedagemDAO(connection);
+		PassagemDAO passagemDAO = new PassagemDAO(connection);
+		PacoteDAO pacoteDAO = new PacoteDAO(connection);
+		DestinoDAO destinoDAO = new DestinoDAO(connection);
+		ClientePacoteDAO cp = new ClientePacoteDAO(connection);
+		ClientePassagemDAO cpassagem = new ClientePassagemDAO(connection);
+
+		int opcao = 0;
+		int subOpcao = 0;
+
+		System.out.println(
+				Colors.BLUE_BOLD_BRIGHT + "                   __      ___                  __  __       _     \r\n"
+						+ "                   \\ \\    / (_)                |  \\/  |     (_)    \r\n"
+						+ "                    \\ \\  / / _  __ _  __ _  ___| \\  / | __ _ _ ___ \r\n"
+						+ "                     \\ \\/ / | |/ _` |/ _` |/ _ \\ |\\/| |/ _` | / __|\r\n"
+						+ "                      \\  /  | | (_| | (_| |  __/ |  | | (_| | \\__ \\\r\n"
+						+ "                       \\/   |_|\\__,_|\\__, |\\___|_|  |_|\\__,_|_|___/\r\n"
+						+ "                                      __/ |                        \r\n"
+						+ "                                     |___/                         \r\n" + "         ");
+
+		do {
+			System.out.println(Colors.BLUE_BOLD_BRIGHT + "\n 1 - Clientes");
+			System.out.println(" 2 - Pacotes de viagens");
+			System.out.println(" 3 - Passagens");
+			System.out.println(" 4 - Pagamentos");
+			System.out.println(" 5 - Sair");
+			System.out.printf(" Escolha uma opção: " + Colors.RESET);
+
+			opcao = input.nextInt();
+
+			switch (opcao) {
+			case 1:
+				showOptions("cliente");
+				subOpcao = input.nextInt();
+				MenuCliente.menuCliente(subOpcao);
+				break;
+			/// ================ PACOTE ============================ //
+			case 2:
+				showOptions("pacotes");
+				subOpcao = input.nextInt();
+				MenuPacote.menuPacote(subOpcao);
+				break;
+			/// ================ PASSAGEM ============================ //
+			case 3:
+				showOptions("passagem");
+				subOpcao = input.nextInt();
+				MenuPassagem.menuPassagem(subOpcao);
+				break;
+
+			/// ================ PAGAMENTOS ============================ //
+			case 4:
+				showOptions("pagamento");
+
+				subOpcao = input.nextInt();
+
+				switch (subOpcao) {
+				case 1:
+					ClientePacote pagPacote = new ClientePacote();
+					SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+					System.out.println("");
+					System.out.println(Colors.YELLOW + " Informe os dados necessários: " + Colors.RESET);
+
+					System.out.print(" Informe a data de compra:  (dd/MM/yyyy) ");
+					Date dataFormatada = formato.parse(input.next());
+					pagPacote.setDataCompra(dataFormatada);
+					System.out.print(" Informe o Id do cliente: ");
+					pagPacote.setCliente(ClienteDAO.findBy(input.nextInt()));
+					System.out.print(" Informe o Id do pacote: ");
+					pagPacote.setPacote(PacoteDAO.findBy(input.nextInt()));
+
+					ClientePacoteDAO.create(pagPacote);
+
+					break;
+				case 2:
+					List<ClientePacote> pagamentos = ClientePacoteDAO.read("");
+
+					System.out.println(Colors.YELLOW
+							+ "-----------------------------------------------------------------------------");
+					System.out.printf("%5s %20s %20s %20s", "ID", "DATA COMPRA", "IDCLIENTE", "IDPACOTE");
+					System.out.println();
+					System.out.println("-----------------------------------------------------------------------------");
+					for (ClientePacote pagamento2 : pagamentos) {
+						System.out.format("%5s %20s %20s %20s", pagamento2.getId(), pagamento2.getDataCompra(),
+								pagamento2.getCliente().getId(), pagamento2.getPacote().getId());
+						System.out.println();
+
+					}
+					System.out.println("-----------------------------------------------------------------------------"
+							+ Colors.RESET);
+
+					break;
+				case 3:
+					// att
+				case 4:
+					System.out.printf(" Informe o ID a ser excluído: ");
+					int deleteId = input.nextInt();
+
+					ClientePacote cliPacote = ClientePacoteDAO.findBy(deleteId);
+
+					System.out.printf(" Id: %d Data compra: %s %n", cliPacote.getId(), cliPacote.getDataCompra());
+
+					System.out.printf(" Deseja excluir? (y/n) ");
+					String yesOrNo = input.next();
+
+					if (yesOrNo.equalsIgnoreCase("y")) {
+						ClientePacoteDAO.delete(deleteId);
+					} else if (yesOrNo.equalsIgnoreCase("n")) {
+						System.out.printf(" Cliente não foi excluído");
+					} else {
+						System.out.printf(" Tente novamente..");
+					}
+
+					break;
+				case 5:
+					break;
+				default:
+					System.out.printf(" Tente novamente..");
+				}
+
+				break;
+
+			case 5:
+				input.close();
+				clienteDAO.fecharConexao();
+				pacoteDAO.fecharConexao();
+				passagemDAO.fecharConexao();
+				break;
+			default:
+
+			}
+
+		} while (opcao != 5);
+
+	}
+
+	public static void showOptions(String service) {
+
+		System.out.println("");
+		System.out.println(Colors.WHITE_BOLD_BRIGHT + " [Menu " + service + "]" + Colors.RESET);
+		System.out.println("\n 1 - Adicionar \n 2 - Visualizar \n 3 - Atualizar \n 4 - Deletar \n 5 - Sair ");
+		System.out.printf(" Escolha uma opção: ");
+	}
+
+}

@@ -14,10 +14,8 @@ import com.agencia.utils.Colors;
 
 public class HospedagemDAO {
 	private static Connection conn;
-	// private static Connection conn =
-	// Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public HospedagemDAO(Connection connection) {
 	      this.conn = connection;
@@ -51,7 +49,7 @@ public class HospedagemDAO {
 		List<Hospedagem> hospedagens = new ArrayList<Hospedagem>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Hospedagem hospedagem = new Hospedagem();
@@ -94,7 +92,7 @@ public class HospedagemDAO {
 			System.out.printf(Colors.GREEN + " [log] hospedagem atualizada" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(" [log] Erro ao atualizar hospedagem com o id : %d, Mensagem: %n", hospedagem.getId(),
+			System.out.printf(" [log] Erro ao atualizar hospedagem com o id : %d, Mensagem: ", hospedagem.getId(),
 					e.getMessage());
 
 		} finally {
@@ -112,7 +110,7 @@ public class HospedagemDAO {
 			System.out.println(Colors.GREEN + " [log] hospedagem foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + " [log] Erro ao deletar hospedagem com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar hospedagem com o id : %d, Mensagem: ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -125,7 +123,7 @@ public class HospedagemDAO {
 		Hospedagem hospedagem = new Hospedagem();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				hospedagem.setId(resultSet.getInt("id"));

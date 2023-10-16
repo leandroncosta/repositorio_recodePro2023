@@ -16,7 +16,7 @@ public class ClientePassagemDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public ClientePassagemDAO(Connection conn) {
 		this.conn = conn;
@@ -32,9 +32,9 @@ public class ClientePassagemDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "--ClientePassagem criado com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] ClientePassagem criado com sucesso." + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println("--Erro ao criar clientePassagem, Mensagem: " + e.getMessage());
+			System.out.println(" [log] Erro ao criar clientePassagem, Mensagem: " + e.getMessage());
 		} finally {
 
 		}
@@ -46,7 +46,7 @@ public class ClientePassagemDAO {
 		List<ClientePassagem> passagens = new ArrayList<ClientePassagem>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				ClientePassagem ClientePassagem = new ClientePassagem();
@@ -61,11 +61,12 @@ public class ClientePassagemDAO {
 				// stmt.setTimestamp(3, new
 				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
 			}
-			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
 			System.out.println("");
 			return passagens;
 		} catch (SQLException e) {
-			System.out.println("--Não foi possíevl ler os dados da tabela clientePassagem. Message: " + e.getMessage());
+			System.out.println(
+					" [log] Não foi possíevl ler os dados da tabela clientePassagem. Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -81,10 +82,10 @@ public class ClientePassagemDAO {
 
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + "--ClientePassagem atualizada" + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] ClientePassagem atualizada" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf("--Erro ao atualizar clientePassagem com o id : %d, Mensagem: %n",
+			System.out.printf(" [log] Erro ao atualizar clientePassagem com o id : %d, Mensagem: ",
 					clientePassagem.getId(), e.getMessage());
 
 		} finally {
@@ -100,10 +101,10 @@ public class ClientePassagemDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "--ClientePassagem foi deletado com sucesso." + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] ClientePassagem foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "--Erro ao deletar clientePassagem com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar clientePassagem com o id : %d, Mensagem:", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -112,12 +113,12 @@ public class ClientePassagemDAO {
 	}
 
 	public static ClientePassagem findBy(int clientePassagemId) {
-		sql = String.format("SELECT * FROM clientePassagem WHERE id = %d or cpf = %s", clientePassagemId,
+		sql = String.format("SELECT * FROM clientePassagem WHERE id = %d OR cpf = %s", clientePassagemId,
 				clientePassagemId);
 		ClientePassagem clientePassagem = new ClientePassagem();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 
@@ -128,11 +129,12 @@ public class ClientePassagemDAO {
 
 			}
 
-			System.out.println(Colors.GREEN + "--Encontrado ClientePassagem com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Encontrado ClientePassagem com sucesso" + Colors.RESET);
 
 			return clientePassagem;
 		} catch (SQLException e) {
-			System.out.println("--Não foi possível encontrar o ClientePassagem informado. Message: " + e.getMessage());
+			System.out.println(
+					" [log] Não foi possível encontrar o ClientePassagem informado. Message: " + e.getMessage());
 			return null;
 		}
 

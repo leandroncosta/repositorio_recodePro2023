@@ -1,0 +1,56 @@
+package com.agencia.model;
+
+import java.util.Date;
+
+public class Contato {
+	private int id;
+	private Date data;
+	private String email;
+	private String mensagem;
+
+	public Contato() {
+		super();
+
+	}
+
+	public Contato(Date data, String email, String mensagem) {
+		super();
+		this.data = data;
+		this.email = email;
+		this.mensagem = mensagem;
+	}
+
+	// Getters and Setters
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDescricao() {
+		return mensagem;
+	}
+
+	public void setDescricao(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
+}

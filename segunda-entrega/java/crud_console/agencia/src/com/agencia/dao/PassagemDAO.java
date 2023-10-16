@@ -17,7 +17,7 @@ public class PassagemDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public PassagemDAO(Connection conn) {
 		this.conn = conn;
@@ -37,7 +37,7 @@ public class PassagemDAO {
 			stmt.setInt(7, passagem.getQuantidade());
 			stmt.setBoolean(8, true); // default true;
 			int n = (int) Math.ceil(Math.random());
-			stmt.setString(9,  Integer.toString(n));
+			stmt.setString(9, Integer.toString(n));
 			stmt.setBigDecimal(10, new BigDecimal(200));
 			stmt.setInt(11, passagem.getDestino().getId());
 
@@ -45,19 +45,21 @@ public class PassagemDAO {
 
 			System.out.println(Colors.GREEN + " [log] Passagem criado com sucesso" + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + " [log] Erro ao criar passagem, Mensagem: " + e.getMessage() + Colors.RESET);
+			System.out
+					.println(Colors.RED + " [log] Erro ao criar passagem, Mensagem: " + e.getMessage() + Colors.RESET);
 		} finally {
 
 		}
 	}
 
 	public static List<Passagem> read(String pesquisa) {
-		//sql = String.format("SELECT * FROM passagem WHERE id LIKE '%d%%' OR cnpjCompania '%s%%'", pesquisa, pesquisa);
+		// sql = String.format("SELECT * FROM passagem WHERE id LIKE '%d%%' OR
+		// cnpjCompania '%s%%'", pesquisa, pesquisa);
 		sql = String.format("SELECT * FROM passagem ", pesquisa, pesquisa);
 		List<Passagem> passagens = new ArrayList<Passagem>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Passagem passagem = new Passagem();
@@ -75,14 +77,13 @@ public class PassagemDAO {
 				passagem.setValor(resultSet.getBigDecimal("valor"));
 				passagem.setDestino(DestinoDAO.findBy(resultSet.getInt("idDestino")));
 
-				// stmt.setTimestamp(3, new
-				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
 			}
 			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
 			System.out.println("");
 			return passagens;
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + "\n [log] Não foi possíevl ler os dados da tabela passagem. Message: " + e.getMessage() + "\n" + Colors.RESET);
+			System.out.println(Colors.RED + " [log] Não foi possíevl ler os dados da tabela passagem. Message: "
+					+ e.getMessage() + Colors.RESET);
 			return null;
 		}
 	}
@@ -93,7 +94,7 @@ public class PassagemDAO {
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setString(1, passagem.getCompania());
-			stmt.setBoolean(2, passagem.getIdaEvolta());
+			stmt.setBoolean(2, true);
 			stmt.setTimestamp(3, new java.sql.Timestamp(passagem.getData().getTime()));
 			stmt.setInt(4, passagem.getTaxaServico());
 			stmt.setInt(5, passagem.getTaxaEmbarque());
@@ -106,11 +107,11 @@ public class PassagemDAO {
 			stmt.setInt(12, passagem.getId());
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + "\n [log] Passagem atualizada \n" + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] Passagem atualizada " + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "\n [log] Erro ao atualizar passagem com o id : %d, Mensagem: %s %n", passagem.getId(),
-					e.getMessage() + Colors.RESET);
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar passagem com o id : %d, Mensagem: %s ",
+					passagem.getId(), e.getMessage() + Colors.RESET);
 
 		} finally {
 
@@ -124,10 +125,10 @@ public class PassagemDAO {
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "\n [log] Passagem foi deletado com sucesso. \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Passagem foi deletado com sucesso. " + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "%n [log] Erro ao deletar passagem com o id : %d, Mensagem: %s %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar passagem com o id : %d, Mensagem: %s ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -136,11 +137,12 @@ public class PassagemDAO {
 	}
 
 	public static Passagem findBy(int PassagemId) {
-		sql = String.format("SELECT * FROM passagem WHERE id = %d or cnpjCompania = %s", PassagemId, Integer.toString(PassagemId) );
+		sql = String.format("SELECT * FROM passagem WHERE id = %d OR cnpjCompania = %s", PassagemId,
+				Integer.toString(PassagemId));
 		Passagem passagem = new Passagem();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				passagem.setId(resultSet.getInt("id"));
@@ -157,11 +159,12 @@ public class PassagemDAO {
 				passagem.setDestino(DestinoDAO.findBy(resultSet.getInt("idDestino")));
 			}
 
-			System.out.println(Colors.GREEN +"\n [log] Encontrado Passagem com sucesso \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Encontrado Passagem com sucesso " + Colors.RESET);
 
 			return passagem;
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + "\n [log] Não foi possível encontrar o passagem informado. Message: " + e.getMessage() + "\n" +Colors.RESET);
+			System.out.println(Colors.RED + " [log] Não foi possível encontrar o passagem informado. Message: "
+					+ e.getMessage()  + Colors.RESET);
 			return null;
 		}
 

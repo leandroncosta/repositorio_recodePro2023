@@ -16,14 +16,14 @@ public class DestinoDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public DestinoDAO(Connection conn) {
 		this.conn = conn;
 	}
 
 	public static void create(Destino destino) {
-		sql = "INSERT INTO Destino(id, cidade, estado, pais, imagem) VALUES(null, ?, ?, ?, ?);";
+		sql = "INSERT INTO destino(id, cidade, estado, pais, imagem) VALUES(null, ?, ?, ?, ?);";
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -47,7 +47,7 @@ public class DestinoDAO {
 		List<Destino> destinos = new ArrayList<Destino>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Destino destino = new Destino();
@@ -84,7 +84,7 @@ public class DestinoDAO {
 			System.out.printf(Colors.GREEN + " [log] Destino atualizada" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf( Colors.RED +" [log] Erro ao atualizar destino com o id : %d, Mensagem: %n", destino.getId(),
+			System.out.printf( Colors.RED +" [log] Erro ao atualizar destino com o id : %d, Mensagem:", destino.getId(),
 					e.getMessage());
 
 		} finally {
@@ -102,7 +102,7 @@ public class DestinoDAO {
 			System.out.println(Colors.GREEN + " [log] Destino foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + " [log] Erro ao deletar destino com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar destino com o id : %d, Mensagem: ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -115,7 +115,7 @@ public class DestinoDAO {
 		Destino destino = new Destino();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+		 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 

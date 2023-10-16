@@ -17,7 +17,7 @@ public class ClienteDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public ClienteDAO(Connection conn) {
 		this.conn = conn;
@@ -35,9 +35,9 @@ public class ClienteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "\n [log] Cliente criado com sucesso." + " \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Cliente criado com sucesso."  + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println("\n [log] Erro ao criar cliente, Mensagem: \n" + e.getMessage());
+			System.out.println(Colors.RED + " [log] Erro ao criar cliente, Mensagem: " + e.getMessage());
 		} finally {
 
 		}
@@ -48,7 +48,7 @@ public class ClienteDAO {
 		List<Cliente> clientes = new ArrayList<Cliente>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Cliente cliente = new Cliente();
@@ -62,12 +62,12 @@ public class ClienteDAO {
 				clientes.add(cliente);
 			}
 
-			System.out.println(Colors.GREEN + "\n [log] Resultado retornado com sucesso." + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso." + Colors.RESET);
 			System.out.println("");
 			return clientes;
 		} catch (SQLException e) {
-			System.out
-					.println("\n [log] Não foi possíevl ler os dados da tabela cliente. Message: \n" + e.getMessage());
+			System.out.println(Colors.RED + " [log] Não foi possíevl ler os dados da tabela cliente. Message: "
+					+ e.getMessage());
 			return null;
 		}
 	}
@@ -85,11 +85,11 @@ public class ClienteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + "\n [log] Cliente atualizado. \n" + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] Cliente atualizado. " + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "%n [log] Erro ao atualizar cliente com o id: %d, Mensagem: %s %n", cliente.getId(),
-					e.getMessage());
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar cliente com o id: %d, Mensagem: %s",
+					cliente.getId(), e.getMessage());
 
 		} finally {
 
@@ -103,10 +103,10 @@ public class ClienteDAO {
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "\n [log] Cliente foi deletado com sucesso. \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Cliente foi deletado com sucesso. " + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "%n [log] Erro ao deletar cliente com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar cliente com o id : %d, Mensagem: ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -115,11 +115,12 @@ public class ClienteDAO {
 	}
 
 	public static Cliente findBy(int clienteId) {
-		sql = String.format("SELECT * FROM cliente WHERE id = %d or cpf = %s", clienteId, clienteId);
+		sql = String.format("SELECT * FROM cliente WHERE id = %d OR cpf = %s", clienteId, clienteId);
 		Cliente cliente = new Cliente();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
+			
 
 			while (resultSet.next()) {
 				cliente.setId(resultSet.getInt("id"));
@@ -130,12 +131,12 @@ public class ClienteDAO {
 				cliente.setCpf(resultSet.getString("cpf"));
 			}
 
-			System.out.println(Colors.GREEN + "\n [log] Encontrado cliente com sucesso. \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Encontrado cliente com sucesso. " + Colors.RESET);
 
 			return cliente;
 		} catch (SQLException e) {
-			System.out.println(
-					"\n [log] Não foi possível encontrar o cliente informado. Message: " + e.getMessage() + ". \n");
+			System.out.println(Colors.RED + " [log] Não foi possível encontrar o cliente informado. Message: "
+					+ e.getMessage() + ".");
 			return null;
 		}
 

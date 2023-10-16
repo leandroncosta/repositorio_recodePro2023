@@ -22,7 +22,6 @@ public class Cliente {
 		this.passaporte = passaporte;
 	}
 
-	// getters and setters
 	public int getId() {
 		return id;
 	}

@@ -15,7 +15,7 @@ public class ClientePacoteDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public ClientePacoteDAO(Connection conn) {
 		this.conn = conn;
@@ -31,9 +31,10 @@ public class ClientePacoteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "\n [log] ClientePacote criado com sucesso \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] ClientePacote criado com sucesso " + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + "\n  [log] Erro ao criar clientePacote, Mensagem: " + e.getMessage() + "\n");
+			System.out
+					.println(Colors.RED + " [log] Erro ao criar clientePacote, Mensagem: " + e.getMessage() );
 		} finally {
 
 		}
@@ -44,7 +45,7 @@ public class ClientePacoteDAO {
 		List<ClientePacote> pacotes = new ArrayList<ClientePacote>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				ClientePacote clientePacote = new ClientePacote();
@@ -55,15 +56,13 @@ public class ClientePacoteDAO {
 				clientePacote.setPacote(PacoteDAO.findBy(resultSet.getInt("idPacote")));
 
 				pacotes.add(clientePacote);
-
-				// stmt.setTimestamp(3, new
-				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
 			}
-			System.out.println(Colors.GREEN + "\n  [log] Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
 			System.out.println("");
 			return pacotes;
 		} catch (SQLException e) {
-			System.out.println("\n  [log] Não foi possível ler os dados da tabela clientePacote. Message: " + e.getMessage());
+			System.out.println(
+					" [log] Não foi possível ler os dados da tabela clientePacote. Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -79,11 +78,11 @@ public class ClientePacoteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + "\n  [log] ClientePacote atualizada \n" + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] ClientePacote atualizada \n" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf("%n  [log] Erro ao atualizar clientePacote com o id : %d, Mensagem: %s %n", clientePacote.getId(),
-					e.getMessage());
+			System.out.printf(" [log] Erro ao atualizar clientePacote com o id : %d, Mensagem: %s ",
+					clientePacote.getId(), e.getMessage());
 
 		} finally {
 
@@ -98,10 +97,10 @@ public class ClientePacoteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "\n [log] ClientePacote foi deletado com sucesso." + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] ClientePacote foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "%n [log] Erro ao deletar clientePacote com o id : %d, Mensagem: %s %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar clientePacote com o id : %d, Mensagem: %s", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -114,7 +113,7 @@ public class ClientePacoteDAO {
 		ClientePacote clientePacote = new ClientePacote();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 
@@ -125,11 +124,12 @@ public class ClientePacoteDAO {
 
 			}
 
-			System.out.println(Colors.GREEN + "\n [log] Encontrado ClientePacote com sucesso \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Encontrado ClientePacote com sucesso." + Colors.RESET);
 
 			return clientePacote;
 		} catch (SQLException e) {
-			System.out.println("  [log] Não foi possível encontrar o clientePacote informado. Message: " + e.getMessage());
+			System.out.println(
+					" [log] Não foi possível encontrar o clientePacote informado. Message: " + e.getMessage());
 			return null;
 		}
 

@@ -17,8 +17,6 @@ public class Passagem {
 	private BigDecimal valor;
 	private Destino destino;
 
-	// construtores
-
 	public Passagem() {
 		super();
 	}

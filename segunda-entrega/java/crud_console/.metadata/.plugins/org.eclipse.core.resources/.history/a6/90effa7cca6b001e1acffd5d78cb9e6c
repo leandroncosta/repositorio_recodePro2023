@@ -1,0 +1,105 @@
+package com.agencia.menus;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Scanner;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.HospedagemDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.dao.PassagemDAO;
+import com.agencia.model.Hospedagem;
+import com.agencia.model.Pacote;
+import com.agencia.utils.Colors;
+
+public class MenuPacote {
+	
+	public static void menuPacote (int subOpcao) {
+		Scanner input = new Scanner(System.in);
+		
+		switch (subOpcao) {
+		case 1:
+			Pacote pacote = new Pacote();
+
+			System.out.println("");
+			System.out.println(Colors.YELLOW + " Informe os dados necessários:" + Colors.RESET);
+
+			pacote.setPromocao(true);
+
+			System.out.print(" Selecione o ID da hospedagem: (default 1 ou 2) ");
+			int hospedagemId = input.nextInt();
+			Hospedagem hsp = HospedagemDAO.findBy(hospedagemId);
+			pacote.setHospedagem(hsp);
+			System.out.printf(Colors.GREEN + " Nome: %s Endereco: %s %n", hsp.getNome(),
+					hsp.getEndereco() + Colors.RESET);
+
+			System.out.print(" Selecione o ID passagem: (default 1 ou 2) ");
+			int passagemId = input.nextInt();
+			pacote.setPassagem(PassagemDAO.findBy(passagemId));
+
+			pacote.setValorTotal(hsp.getValor().add(PassagemDAO.findBy(passagemId).getValor()));
+
+			PacoteDAO.create(pacote);
+			break;
+		case 2:
+
+			List<Pacote> pacotes = PacoteDAO.read("");
+
+			System.out.println(Colors.YELLOW
+					+ "-----------------------------------------------------------------------------");
+			System.out.printf("%5s %20s", "ID", "DATA COMPRA");
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------------------");
+			for (Pacote pacote1 : pacotes) {
+				System.out.format("%5s %20s", pacote1.getId(), pacote1.getValorTotal());
+				System.out.println("");
+
+			}
+			System.out.println("-----------------------------------------------------------------------------"
+					+ Colors.RESET);
+			break;
+		case 3:
+			System.out.printf(" Informe o ID do pacote: ");
+			int id = input.nextInt();
+
+			Pacote pacote2 = PacoteDAO.findBy(id);
+
+			System.out.printf(Colors.GREEN + " Id: %s Valor total: %s %n", pacote2.getId(),
+					pacote2.getValorTotal() + Colors.RESET);
+			System.out.println("");
+			System.out.println(Colors.YELLOW + " Atualize os dados abaixo: " + Colors.RESET);
+			System.out.print(" Valor Total: ");
+			pacote2.setValorTotal((BigDecimal) input.nextBigDecimal());
+
+			PacoteDAO.update(pacote2);
+
+			break;
+		case 4:
+			System.out.printf(" Informe o ID do pacote a ser excluído: ");
+			int deleteId = input.nextInt();
+
+			Pacote pacote3 = PacoteDAO.findBy(deleteId);
+
+			System.out.printf(Colors.GREEN + " Id: %s Valor total: %s %n", pacote3.getId(),
+					pacote3.getValorTotal() + Colors.RESET);
+			System.out.printf(" Deseja excluir? (y/n) ");
+			String yesOrNo = input.next();
+
+			if (yesOrNo.equalsIgnoreCase("y")) {
+				ClienteDAO.delete(deleteId);
+			} else if (yesOrNo.equalsIgnoreCase("n")) {
+				System.out.printf(" Pacote não foi excluído");
+			} else {
+				System.out.printf("\n Tente novamente... \n");
+			}
+
+			break;
+		case 5:
+			break;
+		default:
+			System.out.printf("Tente novamente..");
+		}
+
+	}
+
+}

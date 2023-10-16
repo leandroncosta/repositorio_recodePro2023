@@ -23,7 +23,6 @@
     <fullyQualifiedTypeName name="com.agencia.dao.Destino"/>
     <fullyQualifiedTypeName name="com.agencia.model.Destino"/>
     <fullyQualifiedTypeName name="java.sql.Statement"/>
-    <fullyQualifiedTypeName name="com.agencia.utils.Colors"/>
     <fullyQualifiedTypeName name="com.agencia.model.Passagem"/>
     <fullyQualifiedTypeName name="com.agencia.dao.PassagemDAO"/>
     <fullyQualifiedTypeName name="com.agencia.model.ClientePacote"/>
@@ -39,8 +38,14 @@
     <fullyQualifiedTypeName name="java.math.BigDecimal"/>
     <fullyQualifiedTypeName name="com.agencia.dao.HospedagemDAO"/>
     <fullyQualifiedTypeName name="com.agencia.model.ClientePassagem"/>
-    <fullyQualifiedTypeName name="java.util.Date"/>
     <fullyQualifiedTypeName name="com.agencia.dao.ClientePassagemDAO"/>
     <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
     <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="com.agencia.menus.MenuCliente"/>
+    <fullyQualifiedTypeName name="com.agencia.menus.MenuPacote"/>
+    <fullyQualifiedTypeName name="com.agencia.menus.MenuPassagem"/>
+    <fullyQualifiedTypeName name="com.agencia.menus.MenuPagamento"/>
+    <fullyQualifiedTypeName name="com.agencia.utils.Colors"/>
 </qualifiedTypeNameHistroy>

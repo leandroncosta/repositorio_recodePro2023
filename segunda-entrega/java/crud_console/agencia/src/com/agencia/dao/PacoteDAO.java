@@ -15,7 +15,7 @@ public class PacoteDAO {
 	private static Connection conn;
 	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public PacoteDAO(Connection conn) {
 		this.conn = conn;
@@ -32,7 +32,7 @@ public class PacoteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + " [log] Pacote criado com sucesso \n" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Pacote criado com sucesso " + Colors.RESET);
 		} catch (SQLException e) {
 			System.out.println(Colors.RED +" [log] Erro ao criar pacote, Mensagem: " + e.getMessage());
 		} finally {
@@ -45,7 +45,7 @@ public class PacoteDAO {
 		List<Pacote> pacotes = new ArrayList<Pacote>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Pacote pacote = new Pacote();
@@ -72,7 +72,7 @@ public class PacoteDAO {
 		sql = "UPDATE pacote SET promocao = ?, valorTotal = ?, idHospedagem = ?, idPassagem = ?  WHERE id = ? LIMIT 1";
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setBoolean(1, pacote.getPromocao());
+			stmt.setBoolean(1, true);
 			stmt.setBigDecimal(2, pacote.getValorTotal());
 			stmt.setInt(3, pacote.getHospedagem().getId());
 			stmt.setInt(4, pacote.getPassagem().getId());
@@ -80,10 +80,10 @@ public class PacoteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + " [log] pacote atualizado \n"  + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] pacote atualizado "  + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED +" [log] Erro ao atualizar pacote com o id : %d, Mensagem: %n", pacote.getId(), e.getMessage());
+			System.out.printf(Colors.RED +" [log] Erro ao atualizar pacote com o id : %d, Mensagem: ", pacote.getId(), e.getMessage());
 
 		} finally {
 
@@ -100,7 +100,7 @@ public class PacoteDAO {
 			System.out.println(Colors.GREEN + " [log] pacote foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + " [log] Erro ao deletar pacote com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar pacote com o id : %d, Mensagem: ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -113,7 +113,7 @@ public class PacoteDAO {
 		Pacote pacote = new Pacote();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 

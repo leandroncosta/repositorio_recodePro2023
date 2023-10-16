@@ -13,9 +13,8 @@ import com.agencia.utils.Colors;
 
 public class UsuarioDAO {
 	private static Connection conn;
-	// private static Connection conn = Database.createConnection();
 	private static String sql;
-	private static ResultSet rset = null;
+	private static ResultSet resultSet = null;
 
 	public UsuarioDAO(Connection conn) {
 		this.conn = conn;
@@ -33,9 +32,9 @@ public class UsuarioDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "--Usuario criado com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Usuario criado com sucesso" + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println("--Erro ao criar usuario, Mensagem: " + e.getMessage());
+			System.out.println(" [log] Erro ao criar usuario, Mensagem: " + e.getMessage());
 		} finally {
 
 		}
@@ -46,7 +45,7 @@ public class UsuarioDAO {
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			 resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Usuario usuario = new Usuario();
@@ -58,15 +57,12 @@ public class UsuarioDAO {
 				usuario.setTipo(resultSet.getString("tipo"));
 
 				usuarios.add(usuario);
-
-				// stmt.setTimestamp(3, new
-				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
 			}
-			System.out.println(Colors.GREEN + "--Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
 			System.out.println("");
 			return usuarios;
 		} catch (SQLException e) {
-			System.out.println("--Não foi possíevl ler os dados da tabela usuario. Message: " + e.getMessage());
+			System.out.println(" [log] Não foi possíevl ler os dados da tabela usuario. Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -83,10 +79,10 @@ public class UsuarioDAO {
 			stmt.setInt(4, usuario.getId());
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + "--Usuario atualizada" + Colors.RESET);
+			System.out.printf(Colors.GREEN + " [log] Usuario atualizada" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf("--Erro ao atualizar Usuario com o id : %d, Mensagem: %n", usuario.getId(),
+			System.out.printf(" [log] Erro ao atualizar Usuario com o id : %d, Mensagem: ", usuario.getId(),
 					e.getMessage());
 
 		} finally {
@@ -102,10 +98,10 @@ public class UsuarioDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + "--Usuario foi deletado com sucesso." + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Usuario foi deletado com sucesso." + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf(Colors.RED + "--Erro ao deletar usuario com o id : %d, Mensagem: %n", id,
+			System.out.printf(Colors.RED + " [log] Erro ao deletar usuario com o id : %d, Mensagem: ", id,
 					e.getMessage() + Colors.RED);
 
 		} finally {
@@ -118,7 +114,7 @@ public class UsuarioDAO {
 		Usuario usuario = new Usuario();
 
 		try (Statement statement = conn.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 
@@ -130,11 +126,11 @@ public class UsuarioDAO {
 
 			}
 
-			System.out.println(Colors.GREEN + "--Encontrado usuario com sucesso" + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Encontrado usuario com sucesso" + Colors.RESET);
 
 			return usuario;
 		} catch (SQLException e) {
-			System.out.println("--Não foi possível encontrar o usuario informado. Message: " + e.getMessage());
+			System.out.println(" [log] Não foi possível encontrar o usuario informado. Message: " + e.getMessage());
 			return null;
 		}
 

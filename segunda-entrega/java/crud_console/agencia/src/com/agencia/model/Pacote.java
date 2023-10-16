@@ -2,7 +2,6 @@ package com.agencia.model;
 
 import java.math.BigDecimal;
 
-
 public class Pacote {
 
 	private int id;
@@ -14,7 +13,7 @@ public class Pacote {
 	public Pacote() {
 		super();
 	}
-	
+
 	public Pacote(boolean promocao, BigDecimal valorTotal, Hospedagem hospedagem, Passagem passagem) {
 		super();
 		this.promocao = promocao;
@@ -22,7 +21,6 @@ public class Pacote {
 		this.hospedagem = hospedagem;
 		this.passagem = passagem;
 	}
-
 
 	public int getId() {
 		return id;
@@ -39,7 +37,7 @@ public class Pacote {
 	public void setPromocao(boolean promocao) {
 		this.promocao = promocao;
 	}
-	
+
 	public Boolean getPromocao() {
 		return promocao;
 	}
@@ -69,6 +67,6 @@ public class Pacote {
 	}
 
 	public void calculaValorTotal() {
-		
+
 	}
 }

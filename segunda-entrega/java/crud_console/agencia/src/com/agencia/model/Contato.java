@@ -20,7 +20,6 @@ public class Contato {
 		this.mensagem = mensagem;
 	}
 
-	//Getters and Setters
 	public int getId() {
 		return id;
 	}

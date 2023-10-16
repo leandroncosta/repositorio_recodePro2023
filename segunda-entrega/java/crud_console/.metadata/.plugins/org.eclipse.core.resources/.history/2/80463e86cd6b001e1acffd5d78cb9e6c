@@ -1,0 +1,147 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.Pacote;
+import com.agencia.utils.Colors;
+
+public class PacoteDAO {
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet resultSet = null;
+
+	public PacoteDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(Pacote pacote) {
+		sql = "INSERT INTO pacote(id, promocao, valorTotal, idHospedagem, idPassagem) VALUES(null, ?, ?, ?, ?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setBoolean(1, pacote.getPromocao());
+			stmt.setBigDecimal(2, pacote.getValorTotal());
+			stmt.setInt(3, pacote.getHospedagem().getId());
+			stmt.setInt(4, pacote.getPassagem().getId());
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] Pacote criado com sucesso " + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println(Colors.RED +" [log] Erro ao criar pacote, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<Pacote> read(String pesquisa) {
+		sql = String.format("SELECT * FROM pacote" , pesquisa);
+		List<Pacote> pacotes = new ArrayList<Pacote>();
+
+		try (Statement statement = conn.createStatement()) {
+			 resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Pacote pacote = new Pacote();
+
+				pacote.setId(resultSet.getInt("id"));
+				pacote.setPromocao(resultSet.getBoolean("promocao"));
+				pacote.setValorTotal(resultSet.getBigDecimal("valorTotal"));
+				pacote.setHospedagem(HospedagemDAO.findBy(resultSet.getInt("idHospedagem")));
+				pacote.setPassagem(PassagemDAO.findBy(resultSet.getInt("idPassagem")));
+
+				pacotes.add(pacote);
+			}
+
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return pacotes;
+		} catch (SQLException e) {
+			System.out.println(Colors.RED + " [log] Não foi possíevel ler os dados da tabela pacote. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(Pacote pacote) {
+		sql = "UPDATE pacote SET promocao = ?, valorTotal = ?, idHospedagem = ?, idPassagem = ?  WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setBoolean(1, true);
+			stmt.setBigDecimal(2, pacote.getValorTotal());
+			stmt.setInt(3, pacote.getHospedagem().getId());
+			stmt.setInt(4, pacote.getPassagem().getId());
+			stmt.setInt(5, pacote.getId());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + "\n [log] pacote atualizado \n"  + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED +" [log] Erro ao atualizar pacote com o id : %d, Mensagem: %n", pacote.getId(), e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM pacote WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] pacote foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao deletar pacote com o id : %d, Mensagem: %n", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static Pacote findBy(int pacoteId) {
+		sql = String.format("SELECT * FROM pacote WHERE id = %d", pacoteId);
+		Pacote pacote = new Pacote();
+
+		try (Statement statement = conn.createStatement()) {
+			 resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+
+				pacote.setId(resultSet.getInt("id"));
+				pacote.setPromocao(resultSet.getBoolean("promocao"));
+				pacote.setValorTotal(resultSet.getBigDecimal("valorTotal"));
+				pacote.setHospedagem(HospedagemDAO.findBy(resultSet.getInt("idHospedagem")));
+				pacote.setPassagem(PassagemDAO.findBy(resultSet.getInt("idPassagem")));
+			}
+
+			System.out.println(Colors.GREEN + " [log] Encontrado pacote com sucesso" + Colors.RESET);
+
+			return pacote;
+		} catch (SQLException e) {
+			System.out.println(Colors.RED +" [log] Não foi possível encontrar o pacote informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+
+	public void fecharConexao() {
+		try {
+			if (conn != null && !conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
