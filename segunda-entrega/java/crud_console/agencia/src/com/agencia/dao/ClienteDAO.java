@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agencia.database.Database;
 import com.agencia.model.Cliente;
 import com.agencia.utils.Colors;
 
@@ -35,7 +34,7 @@ public class ClienteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.println(Colors.GREEN + " [log] Cliente criado com sucesso."  + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Cliente criado com sucesso." + Colors.RESET);
 		} catch (SQLException e) {
 			System.out.println(Colors.RED + " [log] Erro ao criar cliente, Mensagem: " + e.getMessage());
 		} finally {
@@ -66,8 +65,8 @@ public class ClienteDAO {
 			System.out.println("");
 			return clientes;
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + " [log] Não foi possíevl ler os dados da tabela cliente. Message: "
-					+ e.getMessage());
+			System.out.println(
+					Colors.RED + " [log] Não foi possíevl ler os dados da tabela cliente. Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -85,11 +84,28 @@ public class ClienteDAO {
 
 			stmt.executeUpdate();
 
-			System.out.printf(Colors.GREEN + " [log] Cliente atualizado. " + Colors.RESET);
+			System.out.println(Colors.GREEN + " [log] Cliente atualizado. \n" + Colors.RESET);
 
 		} catch (SQLException e) {
 			System.out.printf(Colors.RED + " [log] Erro ao atualizar cliente com o id: %d, Mensagem: %s",
 					cliente.getId(), e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE cliente SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] Cliente atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar cliente com o id: %d, Mensagem: %s", id,
+					e.getMessage());
 
 		} finally {
 
@@ -120,7 +136,6 @@ public class ClienteDAO {
 
 		try (Statement statement = conn.createStatement()) {
 			resultSet = statement.executeQuery(sql);
-			
 
 			while (resultSet.next()) {
 				cliente.setId(resultSet.getInt("id"));

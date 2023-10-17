@@ -1,0 +1,96 @@
+package com.agencia.model;
+
+import java.util.List;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.utils.Colors;
+
+public class Cliente {
+	private int id;
+	private String nome;
+	private String email;
+	private String telefone;
+	private String passaporte;
+	private String cpf;
+
+	public Cliente() {
+		super();
+
+	}
+
+	public Cliente(String nome, String email, String telefone, String cpf, String passaporte) {
+		super();
+		this.nome = nome;
+		this.email = email;
+		this.telefone = telefone;
+		this.cpf = cpf;
+		this.passaporte = passaporte;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getPassaporte() {
+		return passaporte;
+	}
+
+	public void setPassaporte(String passaporte) {
+		this.passaporte = passaporte;
+	}
+
+	public static void showDatas () {
+		List<Cliente> clientes = ClienteDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s %20s %20s", "ID", "NAME", "EMAIL", "TEL", "PASSAPORTE", "CPF");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------");
+		for (Cliente cliente1 : clientes) {
+			System.out.format("%5s %20s %20s %20s %20s %20s", cliente1.getId(), cliente1.getNome(), cliente1.getEmail(),
+					cliente1.getTelefone(), cliente1.getPassaporte(), cliente1.getCpf());
+			System.out.println();
+
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
+		System.out.println("");
+	}
+}

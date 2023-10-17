@@ -1,5 +1,10 @@
 package com.agencia.model;
 
+import java.util.List;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.utils.Colors;
+
 public class Cliente {
 	private int id;
 	private String nome;
@@ -70,4 +75,21 @@ public class Cliente {
 		this.passaporte = passaporte;
 	}
 
+	public static void showDatas () {
+		List<Cliente> clientes = ClienteDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s %20s %20s", "ID", "NOME", "EMAIL", "TELEFONE", "PASSAPORTE", "CPF");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------");
+		for (Cliente cliente1 : clientes) {
+			System.out.format("%5s %20s %20s %20s %20s %20s", cliente1.getId(), cliente1.getNome(), cliente1.getEmail(),
+					cliente1.getTelefone(), cliente1.getPassaporte(), cliente1.getCpf());
+			System.out.println();
+
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
+	}
 }

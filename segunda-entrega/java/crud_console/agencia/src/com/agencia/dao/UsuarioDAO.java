@@ -45,7 +45,7 @@ public class UsuarioDAO {
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 
 		try (Statement statement = conn.createStatement()) {
-			 resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				Usuario usuario = new Usuario();
@@ -83,6 +83,23 @@ public class UsuarioDAO {
 
 		} catch (SQLException e) {
 			System.out.printf(" [log] Erro ao atualizar Usuario com o id : %d, Mensagem: ", usuario.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE usuario SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] Usuário atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar usuário com o id: %d, Mensagem: %s", id,
 					e.getMessage());
 
 		} finally {

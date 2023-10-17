@@ -1,0 +1,76 @@
+package com.agencia.model;
+
+import java.util.Date;
+import java.util.List;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.utils.Colors;
+
+public class ClientePacote {
+	private int id;
+	private Date dataCompra;
+	private Cliente cliente;
+	private Pacote pacote;
+
+	public ClientePacote() {
+		super();
+
+	}
+
+	public ClientePacote(Date dataCompra, Cliente cliente, Pacote pacote) {
+		super();
+		this.dataCompra = dataCompra;
+		this.cliente = cliente;
+		this.pacote = pacote;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Date getDataCompra() {
+		return dataCompra;
+	}
+
+	public void setDataCompra(Date dataCompra) {
+		this.dataCompra = dataCompra;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public Pacote getPacote() {
+		return pacote;
+	}
+
+	public void setPacote(Pacote pacote) {
+		this.pacote = pacote;
+	}
+
+	public static void showDatas () {
+		List<ClientePacote> cp = ClientePacoteDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s", "ID", "DATA COMPRA", "ID-CLIENTE", "ID-PACOTE");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------");
+		for (ClientePacote c : cp) {
+			System.out.format("%5s %20s %20s %20s", c.getId() , c.getDataCompra(), c.getCliente().getId(), c.getPacote().getId()));
+			System.out.println();
+
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
+		System.out.println("");
+	}
+}

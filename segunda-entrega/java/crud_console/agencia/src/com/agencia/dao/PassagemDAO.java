@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +75,7 @@ public class PassagemDAO {
 				passagem.setCnpjCompania(resultSet.getString("cnpjCompania"));
 				passagem.setValor(resultSet.getBigDecimal("valor"));
 				passagem.setDestino(DestinoDAO.findBy(resultSet.getInt("idDestino")));
+				passagens.add(passagem);
 
 			}
 			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
@@ -118,6 +118,23 @@ public class PassagemDAO {
 		}
 	}
 
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE passagem SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] Passagem atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar passagem com o id: %d, Mensagem: %s", id,
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
 	public static void delete(int id) {
 		sql = "DELETE FROM passagem WHERE id = ? LIMIT 1";
 
@@ -142,7 +159,7 @@ public class PassagemDAO {
 		Passagem passagem = new Passagem();
 
 		try (Statement statement = conn.createStatement()) {
-			 resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				passagem.setId(resultSet.getInt("id"));
@@ -164,10 +181,9 @@ public class PassagemDAO {
 			return passagem;
 		} catch (SQLException e) {
 			System.out.println(Colors.RED + " [log] Não foi possível encontrar o passagem informado. Message: "
-					+ e.getMessage()  + Colors.RESET);
+					+ e.getMessage() + Colors.RESET);
 			return null;
 		}
-
 	}
 
 	public void fecharConexao() {

@@ -23,7 +23,7 @@ import com.agencia.utils.Colors;
 public class Main {
 
 	public static void main(String[] args) throws ParseException {
-
+	
 		Scanner input = new Scanner(System.in);
 		var connection = Database.createConnection();
 		ClienteDAO clienteDAO = new ClienteDAO(connection);
@@ -48,10 +48,11 @@ public class Main {
 						+ "                                     |___/                         \r\n" + "         ");
 
 		do {
-			System.out.println(Colors.BLUE_BOLD_BRIGHT + "\n 1 - Clientes");
+			System.out.println("\n");
+			System.out.println(Colors.BLUE_BOLD_BRIGHT + " 1 - Clientes");
 			System.out.println(" 2 - Pacotes de viagens");
 			System.out.println(" 3 - Passagens");
-			System.out.println(" 4 - Pagamentos");
+			System.out.println(" 4 - Compras (cliente-pacote)");
 			System.out.println(" 5 - Sair");
 			System.out.printf(" Escolha uma opção: " + Colors.RESET);
 
@@ -77,7 +78,7 @@ public class Main {
 				break;
 			/// ================ PAGAMENTOS ============================ //
 			case 4:
-				showOptions("pagamento");
+				showOptions("compras");
 				subOpcao = input.nextInt();
 				MenuPagamento.menuPagamento(subOpcao);
 				break;

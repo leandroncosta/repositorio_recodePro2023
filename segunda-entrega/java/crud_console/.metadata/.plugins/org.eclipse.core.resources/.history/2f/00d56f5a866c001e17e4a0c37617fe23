@@ -1,0 +1,127 @@
+package com.agencia.menus;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Scanner;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.DestinoDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.dao.PassagemDAO;
+import com.agencia.model.Cliente;
+import com.agencia.model.Destino;
+import com.agencia.model.Pacote;
+import com.agencia.model.Passagem;
+import com.agencia.utils.Colors;
+
+public class MenuPassagem {
+
+	public static void menuPassagem(int subOpcao) {
+		Scanner input = new Scanner(System.in);
+
+		switch (subOpcao) {
+
+		case 1:
+			Passagem passagem = new Passagem();
+
+			System.out.println(Colors.YELLOW + " Informe os dados necessários: \n" + Colors.RESET);
+			System.out.print(" Deseja de qual compania (Ex: Latam, Gol, Azul..) ? ");
+			passagem.setCompania(input.next());
+
+			String yesOrNo = "";
+
+			while (!(yesOrNo.equalsIgnoreCase("y") || yesOrNo.equalsIgnoreCase("n"))) {
+				System.out.print(" Deseja passagem de volta?: (y/n) ");
+				yesOrNo = input.next();
+				if (yesOrNo.equalsIgnoreCase("y")) {
+					passagem.setIdaEvolta(true);
+				} else if (yesOrNo.equalsIgnoreCase("n")) {
+					passagem.setIdaEvolta(false);
+				} else {
+					System.out.println(" Tente novamente...");
+				}
+			}
+
+			System.out.print(" Deseja qual tipo de voo? 1 - Direto 2 - Escala 3 - Conexão ");
+			int tipoVoo = input.nextInt();
+
+			if (tipoVoo == 1) {
+				passagem.setTipoVoo("direto");
+			} else if (tipoVoo == 2) {
+				passagem.setTipoVoo("escala");
+			} else {
+				passagem.setTipoVoo("conexao");
+			}
+
+			System.out.print(" Informe a quantidade: ");
+			passagem.setQuantidade(input.nextInt());
+			
+			Destino.showDatas();
+			
+			System.out.print(" Qual destino?");
+			int destinoId = input.nextInt();
+			passagem.setDestino(DestinoDAO.findBy(destinoId));
+
+			PassagemDAO.create(passagem);
+			break;
+		case 2:
+
+			List<Passagem> passagens = PassagemDAO.read("");
+
+			System.out.println(
+					Colors.YELLOW + "-----------------------------------------------------------------------------");
+			System.out.printf("%5s %20s %20s %20s", "ID", "DATA", "DESTINO", "VALOR");
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------------------");
+			for (Passagem passagem2 : passagens) {
+				System.out.format("%5s %20s %20s %20s", passagem2.getId(), passagem2.getData(),
+						passagem2.getDestino().getCidade() + "-" + passagem2.getDestino().getPais(),
+						passagem2.getValor());
+				System.out.println("");
+
+			}
+			System.out.println(
+					"-----------------------------------------------------------------------------" + Colors.RESET);
+			break;
+		case 3:
+			Passagem.showDatas();
+			System.out.print( " Escolha o ID da passagem: ");
+			int id = input.nextInt();
+
+			
+			Passagem passagem2 = PassagemDAO.findBy(id);
+			
+			System.out.print(" Qual campo deseja atualizar?: ");
+			String field;
+			field = input.next();
+			
+			System.out.print(" Informe o novo valor para " + field + ": ");
+			String value;
+			value = input.next();
+			
+			PassagemDAO.updateBy(id, field, value);
+			break;
+		case 4:
+			Passagem.showDatas();
+			System.out.printf("\n Informe o ID ou CPF do cliente a ser excluído: ");
+			int deleteId = input.nextInt();
+
+			System.out.print("\n Deseja excluir? (y/n) ");
+			 yesOrNo = input.next();
+
+			if (yesOrNo.equalsIgnoreCase("y")) {
+				PassagemDAO.delete(deleteId);
+			} else if (yesOrNo.equalsIgnoreCase("n")) {
+				System.out.printf(" Cliente não foi excluído");
+			} else {
+				System.out.printf("\n Tente novamente... \n");
+			}
+		case 5:
+
+			break;
+		default:
+			System.out.println("\n Tente novamente... \n");
+		}
+
+	}
+}

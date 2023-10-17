@@ -1,5 +1,11 @@
 package com.agencia.model;
 
+import java.util.List;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.DestinoDAO;
+import com.agencia.utils.Colors;
+
 public class Destino {
 	private int id;
 	private String cidade;
@@ -60,4 +66,19 @@ public class Destino {
 		this.imagem = imagem;
 	}
 
+	public static void showDatas () {
+		List<Destino> destinos = DestinoDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s", "ID", "CIDADE", "ESTADO", "PAIS");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------");
+		for (Destino d : destinos) {
+			System.out.format("%5s %20s %20s %20s", d.getId(), d.getCidade(), d.getEstado(), d.getPais());
+			System.out.println();
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
+	}
 }

@@ -1,0 +1,121 @@
+package com.agencia.menus;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.ClientePacoteDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.model.Cliente;
+import com.agencia.model.ClientePacote;
+import com.agencia.model.Pacote;
+import com.agencia.utils.Colors;
+
+public class MenuPagamento {
+
+	public static void menuPagamento(int subOpcao) throws ParseException {
+		Scanner input = new Scanner(System.in);
+
+		switch (subOpcao) {
+		case 1:
+			ClientePacote pagPacote = new ClientePacote();
+			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+			System.out.println("");
+			System.out.println(Colors.YELLOW + " Informe os dados necessários: " + Colors.RESET);
+
+			System.out.println(" Informe a data de compra (dd/MM/yyyy) ");
+			String[] dateInfo = {"Ano","Mês", "Dia" };
+			List<String> date = new ArrayList<>();
+			
+			for(int i =0; i< 3; i++) {
+				System.out.printf(" Informe o %s: ", dateInfo[i]);
+				date.add(input.next());
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			for (String i : date) sb.append( i + "/");
+			sb.deleteCharAt(sb.length() - 1);
+			
+			System.out.println(sb);
+			
+			Date dataFormatada = formato.parse(sb.toString());
+			pagPacote.setDataCompra(dataFormatada);
+			
+			Cliente.showDatas();
+			
+			System.out.print(" Informe o Id do cliente: ");
+			pagPacote.setCliente(ClienteDAO.findBy(input.nextInt()));
+			
+			Pacote.showDatas();
+			
+			System.out.print(" Informe o Id do pacote: ");
+			pagPacote.setPacote(PacoteDAO.findBy(input.nextInt()));
+
+			ClientePacoteDAO.create(pagPacote);
+
+			break;
+		case 2:
+			List<ClientePacote> pagamentos = ClientePacoteDAO.read("");
+
+			System.out.println(
+					Colors.YELLOW + "-----------------------------------------------------------------------------");
+			System.out.printf("%5s %20s %20s %20s", "ID", "DATA COMPRA", "IDCLIENTE", "IDPACOTE");
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------------------");
+			for (ClientePacote pagamento2 : pagamentos) {
+				System.out.format("%5s %20s %20s %20s", pagamento2.getId(), pagamento2.getDataCompra(),
+						pagamento2.getCliente().getId(), pagamento2.getPacote().getId());
+				System.out.println();
+
+			}
+			System.out.println(
+					"-----------------------------------------------------------------------------" + Colors.RESET);
+
+			break;
+		case 3:
+			ClientePacote.showDatas();
+			System.out.print( " Escolha o ID do pagamento: ");
+			int id = input.nextInt();
+
+			
+			ClientePacote clientePacote = ClientePacoteDAO.findBy(id);
+			
+			System.out.print(" Qual campo deseja atualizar?: ");
+			String field;
+			field = input.next();
+			
+			System.out.print(" Informe o novo valor para " + field + ": ");
+			String value;
+			value = input.next();
+			
+			ClientePacoteDAO.updateBy(id, field, value);
+		case 4:
+			ClientePacote.showDatas();
+			System.out.printf("\n Informe o ID a ser excluído: ");
+			int deleteId = input.nextInt();
+
+			System.out.print("\n Deseja excluir? (y/n) ");
+			String yesOrNo = input.next();
+
+			if (yesOrNo.equalsIgnoreCase("y")) {
+				ClientePacoteDAO.delete(deleteId);
+			} else if (yesOrNo.equalsIgnoreCase("n")) {
+				System.out.printf(" Cliente não foi excluído");
+			} else {
+				System.out.printf("\n Tente novamente... \n");
+			}
+			break;
+		case 5:
+			break;
+		default:
+			System.out.printf("\n Tente novamente... \n");
+		}
+
+	}
+
+}

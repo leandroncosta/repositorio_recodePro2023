@@ -1,6 +1,5 @@
 package com.agencia.menus;
 
-import java.util.List;
 import java.util.Scanner;
 
 import com.agencia.dao.ClienteDAO;
@@ -11,7 +10,7 @@ public class MenuCliente {
 
 	public static void menuCliente(int subOpcao) {
 		Scanner input = new Scanner(System.in);
-		
+
 		switch (subOpcao) {
 		case 1:
 			Cliente cliente = new Cliente();
@@ -33,55 +32,31 @@ public class MenuCliente {
 
 			break;
 		case 2:
-			List<Cliente> clientes = ClienteDAO.read("");
-
-			System.out.println(
-					Colors.YELLOW + "-----------------------------------------------------------------------------");
-			System.out.printf("%5s %20s %20s %20s", "ID", "NAME", "EMAIL", "TEL");
-			System.out.println();
-			System.out.println("-----------------------------------------------------------------------------");
-			for (Cliente cliente1 : clientes) {
-				System.out.format("%5s %20s %20s %20s", cliente1.getId(), cliente1.getNome(), cliente1.getEmail(),
-						cliente1.getTelefone());
-				System.out.println();
-
-			}
-			System.out.println(
-					"-----------------------------------------------------------------------------" + Colors.RESET);
-			System.out.println("");
+			Cliente.showDatas();
 			break;
 		case 3:
-			System.out.print(Colors.YELLOW + "\n Informe o ID ou CPF do cliente: ");
+
+			System.out.println("\n TABELA CLIENTE");
+			Cliente.showDatas();
+
+			System.out.print(" Informe o ID ou CPF do cliente que deseja atualizar: ");
 			int idOrCpf = input.nextInt();
 
-			Cliente cliente2 = ClienteDAO.findBy(idOrCpf);
+			System.out.print(" Qual campo deseja atualizar?: ");
+			String field;
+			field = input.next();
 
-			System.out.printf(Colors.YELLOW + " [Dados] %n Nome: %s CPF: %s %n", cliente2.getNome(),
-					cliente2.getCpf() + Colors.RESET);
+			System.out.print(" Informe o novo valor para " + field + ": ");
+			String value;
+			value = input.next();
 
-			System.out.println("");
-			System.out.println(Colors.YELLOW + " Atualize os dados abaixo: " + Colors.RESET);
-			System.out.print(" Nome: ");
-			cliente2.setNome(input.next());
-			System.out.print(" E-mail: ");
-			cliente2.setEmail(input.next());
-			System.out.print(" Telefone: ");
-			cliente2.setTelefone(input.next());
-			System.out.print(" Passaporte: ");
-			cliente2.setPassaporte(input.next());
-			System.out.print(" Cpf: ");
-			cliente2.setCpf(input.next());
-
-			ClienteDAO.update(cliente2);
+			ClienteDAO.updateBy(idOrCpf, field.toLowerCase(), value);
 			break;
 		case 4:
-			System.out.printf(Colors.YELLOW +"\n Informe o ID ou CPF do cliente a ser excluído: ");
+			Cliente.showDatas();
+			System.out.printf("\n Informe o ID ou CPF que deseja excluir: ");
 			int deleteIdOrCpf = input.nextInt();
 
-			Cliente cliente3 = ClienteDAO.findBy(deleteIdOrCpf);
-
-			System.out.printf(Colors.YELLOW + " [Dados] %n Nome: %s Email: %s CPF: %s %n", cliente3.getNome(),
-					cliente3.getEmail(), cliente3.getCpf() + Colors.RESET);
 			System.out.print("\n Deseja excluir? (y/n) ");
 			String yesOrNo = input.next();
 
@@ -92,7 +67,6 @@ public class MenuCliente {
 			} else {
 				System.out.printf("\n Tente novamente... \n");
 			}
-
 			break;
 		case 5:
 			break;

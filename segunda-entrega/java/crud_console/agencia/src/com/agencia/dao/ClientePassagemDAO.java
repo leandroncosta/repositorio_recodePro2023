@@ -93,6 +93,23 @@ public class ClientePassagemDAO {
 		}
 	}
 
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE clientePassagem SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] clientePassagem atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar clientePassagem com o id: %d, Mensagem: %s", id,
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
 	public static void delete(int id) {
 		sql = "DELETE FROM clientePassagem WHERE id = ? LIMIT 1";
 

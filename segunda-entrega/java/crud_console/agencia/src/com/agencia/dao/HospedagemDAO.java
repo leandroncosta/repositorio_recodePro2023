@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agencia.database.Database;
 import com.agencia.model.Hospedagem;
 import com.agencia.utils.Colors;
 
@@ -18,7 +17,7 @@ public class HospedagemDAO {
 	private static ResultSet resultSet = null;
 
 	public HospedagemDAO(Connection connection) {
-	      this.conn = connection;
+		this.conn = connection;
 	}
 
 	public static void create(Hospedagem hospedagem) {
@@ -45,31 +44,33 @@ public class HospedagemDAO {
 	}
 
 	public static List<Hospedagem> read(String pesquisa) {
-		sql = String.format("SELECT * FROM hospedagem WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		sql = "SELECT * FROM hospedagem";
 		List<Hospedagem> hospedagens = new ArrayList<Hospedagem>();
 
-		try (Statement statement = conn.createStatement()) {
-			 resultSet = statement.executeQuery(sql);
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			resultSet = stmt.executeQuery();
 
 			while (resultSet.next()) {
 				Hospedagem hospedagem = new Hospedagem();
 				hospedagem.setId(resultSet.getInt("id"));
 				hospedagem.setNome(resultSet.getString("nome"));
 				hospedagem.setEstrelas(resultSet.getInt("estrelas"));
-				hospedagem.setNome(resultSet.getString("cnpj"));
+				hospedagem.setCnpj(resultSet.getString("cnpj"));
 				hospedagem.setPromocao(resultSet.getBoolean("promocao"));
 				hospedagem.setValor(resultSet.getBigDecimal("valor"));
 				hospedagem.setEndereco(resultSet.getString("endereco"));
 				hospedagem.setDataEntrada(resultSet.getTimestamp("dataEntrada"));
 				hospedagem.setDataSaida(resultSet.getTimestamp("dataSaida"));
-				// stmt.setTimestamp(3, new
-				// java.sql.Timestamp(consulta.getDataConsulta().getTime()));
+				hospedagens.add(hospedagem);
+
 			}
 			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
 			System.out.println("");
+
 			return hospedagens;
 		} catch (SQLException e) {
-			System.out.println(" [log] Não foi possíevl ler os dados da tabela hospedagem. Message: " + e.getMessage());
+			System.out.println(Colors.RED + " [log] Não foi possíevl ler os dados da tabela hospedagem. Message: "
+					+ e.getMessage());
 			return null;
 		}
 	}
@@ -100,6 +101,23 @@ public class HospedagemDAO {
 		}
 	}
 
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE hospedagem SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] Hospedagem atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar hospedagem com o id: %d, Mensagem: %s", id,
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
 	public static void delete(int id) {
 		sql = "DELETE FROM hospedagem WHERE id = ? LIMIT 1";
 
@@ -123,7 +141,7 @@ public class HospedagemDAO {
 		Hospedagem hospedagem = new Hospedagem();
 
 		try (Statement statement = conn.createStatement()) {
-			 resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 				hospedagem.setId(resultSet.getInt("id"));

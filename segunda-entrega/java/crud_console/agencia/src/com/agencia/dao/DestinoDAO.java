@@ -36,14 +36,14 @@ public class DestinoDAO {
 
 			System.out.println(Colors.GREEN + " [log] Destino criado com sucesso" + Colors.RESET);
 		} catch (SQLException e) {
-			System.out.println(Colors.RED +" [log] Erro ao criar destino, Mensagem: " + e.getMessage());
+			System.out.println(Colors.RED + " [log] Erro ao criar destino, Mensagem: " + e.getMessage());
 		} finally {
 
 		}
 	}
 
 	public static List<Destino> read(String pesquisa) {
-		sql = String.format("SELECT * FROM destino WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		sql = "SELECT * FROM destino";
 		List<Destino> destinos = new ArrayList<Destino>();
 
 		try (Statement statement = conn.createStatement()) {
@@ -65,7 +65,8 @@ public class DestinoDAO {
 			System.out.println("");
 			return destinos;
 		} catch (SQLException e) {
-			System.out.println(Colors.RED +" [log] Não foi possíevl ler os dados da tabela destino. Message: " + e.getMessage());
+			System.out.println(
+					Colors.RED + " [log] Não foi possíevl ler os dados da tabela destino. Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -84,7 +85,24 @@ public class DestinoDAO {
 			System.out.printf(Colors.GREEN + " [log] Destino atualizada" + Colors.RESET);
 
 		} catch (SQLException e) {
-			System.out.printf( Colors.RED +" [log] Erro ao atualizar destino com o id : %d, Mensagem:", destino.getId(),
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar destino com o id : %d, Mensagem:", destino.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE destino SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] Destino atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar destino com o id: %d, Mensagem: %s", id,
 					e.getMessage());
 
 		} finally {
@@ -115,7 +133,7 @@ public class DestinoDAO {
 		Destino destino = new Destino();
 
 		try (Statement statement = conn.createStatement()) {
-		 resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
 
@@ -130,7 +148,8 @@ public class DestinoDAO {
 
 			return destino;
 		} catch (SQLException e) {
-			System.out.println(Colors.RED + " [log] Não foi possível encontrar o destino informado. Message: " + e.getMessage());
+			System.out.println(
+					Colors.RED + " [log] Não foi possível encontrar o destino informado. Message: " + e.getMessage());
 			return null;
 		}
 

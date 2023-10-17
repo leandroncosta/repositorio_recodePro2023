@@ -2,6 +2,11 @@ package com.agencia.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import com.agencia.dao.HospedagemDAO;
+import com.agencia.dao.PacoteDAO;
+import com.agencia.utils.Colors;
 
 public class Hospedagem {
 	private int id;
@@ -101,6 +106,23 @@ public class Hospedagem {
 
 	public void setDataSaida(Date dataSaida) {
 		this.dataSaida = dataSaida;
+	}
+	
+	public static void showDatas () {
+		List<Hospedagem> hospedagens = HospedagemDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s %20s %20s %20s %20s %20s", "ID", "NOME" , "ESTRELAS", "CNPJ", "PROMOCAO", "VALOR", "ENDERECO", "DATA-ENTRADA", "DATA-SAIDA");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		for (Hospedagem h : hospedagens) {
+			System.out.format("%5s %20s %20s %20s %20s %20s %20s %20s %20s", h.getId(), h.getNome() , h.getEstrelas(), h.getCnpj(), h.getPromocao(), h.getValor(), h.getEndereco(), h.getDataEntrada(), h.getDataSaida());
+			
+			System.out.println();
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
 	}
 
 }

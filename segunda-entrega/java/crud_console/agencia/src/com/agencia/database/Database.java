@@ -16,7 +16,7 @@ public class Database {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println(Colors.GREEN + " Driver encontrado." + Colors.RESET);
 		} catch (ClassNotFoundException e) {
-			System.out.println(Colors.RED +  "Driver não encontrado! Mensagem: " + e.getMessage() + Colors.RESET);
+			System.out.println(Colors.RED + " Driver não encontrado! Mensagem: " + e.getMessage() + Colors.RESET);
 		}
 
 		try {

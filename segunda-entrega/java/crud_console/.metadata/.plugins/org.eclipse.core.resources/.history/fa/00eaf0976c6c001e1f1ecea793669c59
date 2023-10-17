@@ -1,0 +1,149 @@
+package com.agencia.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.agencia.model.Destino;
+import com.agencia.utils.Colors;
+
+public class DestinoDAO {
+
+	private static Connection conn;
+	// private static Connection conn = Database.createConnection();
+	private static String sql;
+	private static ResultSet resultSet = null;
+
+	public DestinoDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	public static void create(Destino destino) {
+		sql = "INSERT INTO destino(id, cidade, estado, pais, imagem) VALUES(null, ?, ?, ?, ?);";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, destino.getCidade());
+			stmt.setString(2, destino.getEstado());
+			stmt.setString(3, destino.getPais());
+			stmt.setString(4, destino.getImagem());
+
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] Destino criado com sucesso" + Colors.RESET);
+		} catch (SQLException e) {
+			System.out.println(Colors.RED +" [log] Erro ao criar destino, Mensagem: " + e.getMessage());
+		} finally {
+
+		}
+	}
+
+	public static List<Destino> read(String pesquisa) {
+		sql = String.format("SELECT * FROM destino WHERE nome LIKE '%s%%' OR cpf LIKE '%s%%'", pesquisa, pesquisa);
+		List<Destino> destinos = new ArrayList<Destino>();
+
+		try (Statement statement = conn.createStatement()) {
+			resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Destino destino = new Destino();
+
+				destino.setId(resultSet.getInt("id"));
+				destino.setCidade(resultSet.getString("cidade"));
+				destino.setEstado(resultSet.getString("estado"));
+				destino.setPais(resultSet.getString("pais"));
+				destino.setImagem(resultSet.getString("imagem"));
+
+				destinos.add(destino);
+
+			}
+			System.out.println(Colors.GREEN + " [log] Resultado retornado com sucesso" + Colors.RESET);
+			System.out.println("");
+			return destinos;
+		} catch (SQLException e) {
+			System.out.println(Colors.RED +" [log] Não foi possíevl ler os dados da tabela destino. Message: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public static void update(Destino destino) {
+		sql = "UPDATE destino SET cidade = ?, estado = ?, pais = ?, imagem = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, destino.getCidade());
+			stmt.setString(2, destino.getEstado());
+			stmt.setString(3, destino.getPais());
+			stmt.setString(4, destino.getImagem());
+
+			stmt.executeUpdate();
+
+			System.out.printf(Colors.GREEN + " [log] Destino atualizada" + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf( Colors.RED +" [log] Erro ao atualizar destino com o id : %d, Mensagem:", destino.getId(),
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
+	public static void delete(int id) {
+		sql = "DELETE FROM destino WHERE id = ? LIMIT 1";
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+
+			System.out.println(Colors.GREEN + " [log] Destino foi deletado com sucesso." + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao deletar destino com o id : %d, Mensagem: ", id,
+					e.getMessage() + Colors.RED);
+
+		} finally {
+
+		}
+	}
+
+	public static Destino findBy(int DestinoId) {
+		sql = String.format("SELECT * FROM Destino WHERE id = %d", DestinoId);
+		Destino destino = new Destino();
+
+		try (Statement statement = conn.createStatement()) {
+		 resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+
+				destino.setId(resultSet.getInt("id"));
+				destino.setCidade(resultSet.getString("cidade"));
+				destino.setEstado(resultSet.getString("estado"));
+				destino.setPais(resultSet.getString("pais"));
+				destino.setImagem(resultSet.getString("imagem"));
+			}
+
+			System.out.println(Colors.GREEN + " [log] Encontrado destino com sucesso" + Colors.RESET);
+
+			return destino;
+		} catch (SQLException e) {
+			System.out.println(Colors.RED + " [log] Não foi possível encontrar o destino informado. Message: " + e.getMessage());
+			return null;
+		}
+
+	}
+
+	public void fecharConexao() {
+		try {
+			if (conn != null && !conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

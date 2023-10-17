@@ -33,8 +33,7 @@ public class ClientePacoteDAO {
 
 			System.out.println(Colors.GREEN + " [log] ClientePacote criado com sucesso " + Colors.RESET);
 		} catch (SQLException e) {
-			System.out
-					.println(Colors.RED + " [log] Erro ao criar clientePacote, Mensagem: " + e.getMessage() );
+			System.out.println(Colors.RED + " [log] Erro ao criar clientePacote, Mensagem: " + e.getMessage());
 		} finally {
 
 		}
@@ -89,6 +88,23 @@ public class ClientePacoteDAO {
 		}
 	}
 
+	public static void updateBy(int id, String field, String value) {
+		sql = String.format("UPDATE clientePacote SET %s = '%s' WHERE id = %d", field.trim(), value.trim(), id);
+
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(sql);
+
+			System.out.printf(Colors.GREEN + " [log] ClientePacote atualizado. " + Colors.RESET);
+
+		} catch (SQLException e) {
+			System.out.printf(Colors.RED + " [log] Erro ao atualizar clientePacote com o id: %d, Mensagem: %s", id,
+					e.getMessage());
+
+		} finally {
+
+		}
+	}
+
 	public static void delete(int id) {
 		sql = "DELETE FROM clientePacote WHERE id = ? LIMIT 1";
 
@@ -128,8 +144,8 @@ public class ClientePacoteDAO {
 
 			return clientePacote;
 		} catch (SQLException e) {
-			System.out.println(
-					" [log] Não foi possível encontrar o clientePacote informado. Message: " + e.getMessage());
+			System.out
+					.println(" [log] Não foi possível encontrar o clientePacote informado. Message: " + e.getMessage());
 			return null;
 		}
 

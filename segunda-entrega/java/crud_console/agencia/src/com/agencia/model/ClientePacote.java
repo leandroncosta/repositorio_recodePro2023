@@ -1,6 +1,11 @@
 package com.agencia.model;
 
 import java.util.Date;
+import java.util.List;
+
+import com.agencia.dao.ClienteDAO;
+import com.agencia.dao.ClientePacoteDAO;
+import com.agencia.utils.Colors;
 
 public class ClientePacote {
 	private int id;
@@ -52,4 +57,20 @@ public class ClientePacote {
 		this.pacote = pacote;
 	}
 
+	public static void showDatas () {
+		List<ClientePacote> cp = ClientePacoteDAO.read("");
+
+		System.out.println(
+				Colors.YELLOW + "----------------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s %20s %20s %20s", "ID", "DATA COMPRA", "ID-CLIENTE", "ID-PACOTE");
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------------------------------");
+		for (ClientePacote c : cp) {
+			System.out.format("%5s %20s %20s %20s", c.getId() , c.getDataCompra(), c.getCliente().getId(), c.getPacote().getId());
+			System.out.println();
+
+		}
+		System.out.println(
+				"----------------------------------------------------------------------------------------------------------------------" + Colors.RESET);
+	}
 }
