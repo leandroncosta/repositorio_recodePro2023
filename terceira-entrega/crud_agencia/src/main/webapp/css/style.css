@@ -1,0 +1,119 @@
+@charset "utf-8";
+
+:root {
+  --orange: #bd7b2a;
+  --background-site: rgb(27, 29, 30);
+  --text-color: #e8e6e3;
+}
+
+
+tr {
+	position:  relative;
+	height: auto;
+	
+
+}
+
+h5 > a {
+
+	color: var(--orange);
+	transition: all 0.5s ease;
+}
+
+h5 > a:hover{
+	color: var(--background-site);
+}
+
+
+div.container {
+	margin-top: 3rem;
+	margin-bottom: 3rem;
+}
+
+
+.click {
+	display: block;
+	position: absolute;
+	width: 100%;
+	text-decoration: none;
+	color: #000;
+	z-index: 2;
+}
+
+
+
+
+.delete, .update {
+	position: relative;
+	z-index: 20;
+}
+
+.delete{
+	background: red;
+	padding: 0.5rem 0.8rem;
+
+	
+}
+
+.details {
+	background-color: white;
+	padding: 0.5rem 0.8rem;
+
+}
+
+.update{
+	background-color: yellow;;
+	padding: 0.5rem 0.8rem;
+}
+
+.fa-edit {
+	color: #000;
+	
+}
+
+.fa-trash {
+	color: #fff;
+	
+} 
+
+.user-photo {
+    max-width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid black;
+}
+
+.container-details {
+	margin-top: 4rem;
+    display: flex;
+    column-gap: 3rem;
+    justify-content: center;
+    align-items: center;
+ 
+  
+    
+}
+
+.info {
+    width: 100%;
+}
+
+.container-details p {
+	font-size: 1.8rem;
+
+
+}
+
+@media(max-width: 792px){
+	.container-details{
+		flex-direction: column;
+	}
+	.info{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		
+	}
+}

@@ -1,0 +1,16 @@
+.promotions-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 3rem 0;
+}
+
+.promotions-info img {
+    width: 30px;
+    color: #fff;
+}
+
+.promotions-info span {
+    color: var(--orange);
+}
