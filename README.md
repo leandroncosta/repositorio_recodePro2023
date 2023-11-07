@@ -19,7 +19,7 @@ Este projeto é um MVC construído usando **Java, jsp e Mysql** Sobre a entrega,
 - JSTL [jstl 1.2](https://repo1.maven.org/maven2/javax/servlet/jstl/1.2/jstl-1.2.jar)
 - Servlet-api [java servlet 3.1 ](https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar)
 
-## 🚀 Como executar o projeto.
+## Como executar o projeto.
 
 - Incluir o jstl, servlet-api e connector como uma recursos de dependencia do projeto no build path (Eclipse)
 - Mudar as credenciais do banco de dados se necessário
